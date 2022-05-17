@@ -1,0 +1,2 @@
+const String BASE_URL="http://localhost:1234/api/v1/";
+const String access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI4MGVmYzUzMjU0ZmEyNDU2ZGE2ZWE4In0sImlzQWRtaW4iOnRydWUsImlhdCI6MTY1MjY3NTE3MSwiZXhwIjoxNjUzMDM1MTcxfQ.YvCYw-lGdtxhqHKFa-O2GmWdDg-b3AfOlzeKfFCtFh4";
