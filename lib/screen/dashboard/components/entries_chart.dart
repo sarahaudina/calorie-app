@@ -8,13 +8,17 @@ class EntriesChart extends StatefulWidget {
   final bool showDay;
   final DateTime startDate;
   final DateTime endDate;
+  final maxY;
+  final double dailyCalLimit;
 
   EntriesChart({
     Key? key,
     required this.allEntriesO,
     this.showDay=true,
     required this.startDate,
-    required this.endDate}) : super(key: key);
+    required this.endDate,
+    this.maxY,
+    required this.dailyCalLimit}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -26,6 +30,7 @@ class EntriesChartState extends State<EntriesChart> {
   List<BarChartGroupData> showingBarGroups = [];
   final double barWidth = 7;
   final double barSpace = 4;
+  final dayLabels = ["Mon", "Th", "Wed", "Tue", "Fr", "Sat", "Sun"];
 
   @override
   void initState() {
@@ -48,34 +53,13 @@ class EntriesChartState extends State<EntriesChart> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(
-                    width: 38,
-                  ),
-                  const Text(
-                    'Transactions',
-                    style: TextStyle(color: Colors.white, fontSize: 22),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  const Text(
-                    'state',
-                    style: TextStyle(color: Color(0xff77839a), fontSize: 16),
-                  ),
-                ],
-              ),
               const SizedBox(
                 height: 38,
               ),
               Expanded(
                 child: BarChart(
                   BarChartData(
-                    maxY: 20,
+                    maxY: widget.maxY,
                     barTouchData: BarTouchData(
                       touchTooltipData: BarTouchTooltipData(
                         tooltipBgColor: Colors.grey,
@@ -107,7 +91,11 @@ class EntriesChartState extends State<EntriesChart> {
                       ),
                     ),
                     borderData: FlBorderData(
-                      show: false,
+                      show: true,
+                      border: Border(
+                        left: BorderSide(width: 1.0, color: Colors.white),
+                        bottom: BorderSide(width: 1.0, color: Colors.white),
+                      )
                     ),
                     barGroups: showingBarGroups,
                     gridData: FlGridData(show: false),
@@ -129,78 +117,40 @@ class EntriesChartState extends State<EntriesChart> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 10,
     );
     String text;
     if (value == 0) {
-      text = '1K';
-    } else if (value == 10) {
-      text = '5K';
-    } else if (value == 19) {
-      text = '10K';
+      text = '0 cal';
+    } else if (value == widget.maxY) {
+      text = '$value cal';
     } else {
       return Container();
     }
     return Text(text, style: style);
   }
 
+
   Widget bottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Color(0xff7589a2),
+      color: Colors.white,
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 8,
     );
+
     Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = const Text(
-          'Mn',
-          style: style,
-        );
-        break;
-      case 1:
-        text = const Text(
-          'Te',
-          style: style,
-        );
-        break;
-      case 2:
-        text = const Text(
-          'Wd',
-          style: style,
-        );
-        break;
-      case 3:
-        text = const Text(
-          'Tu',
-          style: style,
-        );
-        break;
-      case 4:
-        text = const Text(
-          'Fr',
-          style: style,
-        );
-        break;
-      case 5:
-        text = const Text(
-          'St',
-          style: style,
-        );
-        break;
-      case 6:
-        text = const Text(
-          'Sn',
-          style: style,
-        );
-        break;
-      default:
-        text = const Text(
-          '',
-          style: style,
-        );
-        break;
+
+    if (widget.showDay) {
+      text = Text(
+        dayLabels[value.toInt()],
+        style: style,
+      );
+    } else {
+        var day = widget.startDate.add(Duration(days: value.toInt())).day;
+        var month = widget.startDate.add(Duration(days: value.toInt())).month;
+        text = Text("$day/$month", style: style,);
     }
+
     return Padding(padding: const EdgeInsets.only(top: 20), child: text);
   }
 
@@ -208,7 +158,7 @@ class EntriesChartState extends State<EntriesChart> {
     return BarChartGroupData(barsSpace: barSpace, x: x, barRods: [
       BarChartRodData(
           toY: y1,
-          color: y1>1500 ? Colors.red : Colors.green,
+          color: y1>widget.dailyCalLimit ? Colors.red : Colors.green,
           width: barWidth
       )
     ]);

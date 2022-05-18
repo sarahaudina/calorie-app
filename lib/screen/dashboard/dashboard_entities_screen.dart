@@ -45,6 +45,12 @@ class EntitiesScreenState extends State<EntitiesScreen> {
     });
   }
 
+  dateRangeForToday() {
+    setState(() {
+      selectedDateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
+    });
+  }
+
   @override
   void initState() {
     resetDateRange();
@@ -58,71 +64,77 @@ class EntitiesScreenState extends State<EntitiesScreen> {
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(right: 16, bottom: 16),
             color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                DropdownButton<String>(
-                  items: widget.modes.map((String items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Text(items),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue){
-                    setState(() {
-                      selectedMode = newValue!;
-                    });
+            child: Expanded(
+              // height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  DropdownButton<String>(
+                    items: widget.modes.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue){
+                      setState(() {
+                        selectedMode = newValue!;
+                      });
 
-                    if (newValue=="Weekly") {
-                      resetDateRange();
+                      if (newValue=="Weekly") {
+                        resetDateRange();
+                      } else {
+                        dateRangeForToday();
+                      }
+
                       EntryAction.of(context).getEntries(
                           fromDate: selectedDateRange?.start,
                           toDate: selectedDateRange?.end
                       );
-                    } else {
-                      EntryAction.of(context).getEntries(
-                          fromDate: DateTime.now(),
-                          toDate: DateTime.now()
-                      );
-                    }
-                  },
-                  value: selectedMode,
-                ),
-                InkWell(
-                    onTap: () async {
-                      if (selectedMode!="Daily") {
-                        showDateRangePicker(
-                          context: context,
-                          lastDate: new DateTime.now(),
-                          firstDate: new DateTime.now()
-                              .subtract(Duration(days: 1000)),
-                        ).then((value) => setState(() {
-                          selectedDateRange = value;
-                          EntryAction.of(context).getEntries(
-                              fromDate: selectedDateRange?.start,
-                              toDate: selectedDateRange?.end
-                          );
-                        }));
-                      }
                     },
-                    child: selectedMode=="Daily"
-                        ? Text("Today")
-                        : Text("${selectedDateRange?.start.toString()} to"
-                        "${selectedDateRange?.end.toString()}")),
+                    value: selectedMode,
+                  ),
+                  InkWell(
+                      onTap: () async {
+                        if (selectedMode!="Daily") {
+                          showDateRangePicker(
+                            context: context,
+                            lastDate: new DateTime.now(),
+                            firstDate: new DateTime.now()
+                                .subtract(Duration(days: 1000)),
+                          ).then((value) => setState(() {
+                            selectedDateRange = value;
+                            EntryAction.of(context).getEntries(
+                                fromDate: selectedDateRange?.start,
+                                toDate: selectedDateRange?.end
+                            );
+                          }));
+                        }
+                      },
+                      child: selectedMode=="Daily"
+                          ? Text("Today")
+                          : Text("${selectedDateRange?.start.toString()} to"
+                          "${selectedDateRange?.end.toString()}")),
+                    LargeCard(contentWidget: Consumer<AllEntriesO>(
+                      builder: (context, entries, __) {
+                        var temp = entries;
+                        temp.allEntries
+                            .sort((a, b) => a.calories.compareTo(b.calories));
+                        double maxy = temp.allEntries.length>0 ? temp.allEntries[0].calories*1.0 : 0.0;
 
-                if (selectedMode=="Weekly")
-                  LargeCard(contentWidget: Consumer<AllEntriesO>(
-                    builder: (context, entries, __) {
-                      return EntriesChart(
-                          allEntriesO: entries,
-                          showDay: true,
-                          startDate: DateTime.now(),
-                          endDate: DateTime.now());
-                    }
-                  ), title: "")
-
-              ],
+                        return EntriesChart(
+                            allEntriesO: entries,
+                            showDay: selectedDateRange?.duration.inDays==7,
+                            startDate: selectedDateRange?.start ?? DateTime.now(),
+                            endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
+                            maxY: maxy,
+                            dailyCalLimit: entries.dailyCaloriesLimit,
+                        );
+                      }
+                    ), title: "")
+                ],
+              ),
             ))
     );
   }
