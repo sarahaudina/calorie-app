@@ -18,12 +18,6 @@ class EntryService extends BaseEntryService {
   }
 
   @override
-  Future<void> deleteEntry(DeleteEntryRequest request) {
-    // TODO: implement deleteEntry
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> getEntries(GetEntriesRequest request) async {
     var response = await httpService.get(
         request: request,
@@ -32,14 +26,8 @@ class EntryService extends BaseEntryService {
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {
-      return allEntriesE.add(AllEntries.fromJson(response.map));
+      return allEntriesE.add(AllEntries.fromResponse(response));
     }
-  }
-
-  @override
-  Future<void> updateEntry(UpdateEntryRequest request) {
-    // TODO: implement updateEntry
-    throw UnimplementedError();
   }
 
 }

@@ -5,8 +5,4 @@ abstract class BaseEntryService {
   Future<void> getEntries(GetEntriesRequest request);
 
   Future<void> createEntry(CreateEntryRequest request);
-
-  Future<void> updateEntry(UpdateEntryRequest request);
-
-  Future<void> deleteEntry(DeleteEntryRequest request);
 }

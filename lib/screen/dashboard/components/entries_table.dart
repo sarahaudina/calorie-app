@@ -28,20 +28,14 @@ class EntriesTable extends StatelessWidget {
               child: DataTable2(
                 minWidth: 600,
                 columns: [
+                  // DataColumn(
+                  //   label: Text("Created At"),
+                  // ),
                   DataColumn(
-                    label: Text(""),
-                  ),
-                  DataColumn(
-                    label: Text("Created At"),
-                  ),
-                  DataColumn(
-                    label: Text("Food Name"),
+                    label: Text("Food"),
                   ),
                   DataColumn(
                     label: Text("Calories"),
-                  ),
-                  DataColumn(
-                    label: Text("User Id"),
                   ),
                   DataColumn(
                     label: Text("Price"),
@@ -61,11 +55,9 @@ class EntriesTable extends StatelessWidget {
 
   DataRow EntryRow ({Key? key, required EntryO entry, required int index, required BuildContext context}) {
     return DataRow(cells: [
-      DataCell(Text(index.toString()), onTap: () => showEntryForm(context, false)),
-      DataCell(Text(entry.createdAt.toString())),
+      // DataCell(Text(entry.createdAt.toString())),
       DataCell(Text(entry.name)),
       DataCell(Text('${entry.calories} cal')),
-      DataCell(Text('${entry.userId}')),
       DataCell(Text('${entry.price}'))
     ]);
   }

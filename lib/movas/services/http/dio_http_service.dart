@@ -17,6 +17,9 @@ class DioInterceptor extends Interceptor {
     var headers = {
       "Accept": "application/json",
     };
+
+    print('going for '+options.uri.toString());
+
     if (options.headers["useToken"]) {
       var accessToken = access_token;
       headers.addAll({"Authorization": "Bearer $accessToken"});
@@ -27,7 +30,10 @@ class DioInterceptor extends Interceptor {
       log("uri "+ options.uri.toString());
       return handler.next(options);
     }
+
   }
+
+
 }
 
 class DioHttpService extends BaseHttpService {

@@ -20,11 +20,21 @@ class EntryO {
 
 class AllEntriesO {
   final List<EntryO> allEntries;
+  final double monthlyBudget;
+  final double dailyCaloriesLimit;
+  final bool passMonthlyBudget;
+  final bool passDailyCaloriesLimit;
 
-  AllEntriesO(this.allEntries);
+  AllEntriesO(this.allEntries, this.monthlyBudget, this.dailyCaloriesLimit, this.passMonthlyBudget, this.passDailyCaloriesLimit);
 
   factory AllEntriesO.fromEntity(AllEntries entity) {
     var entries = List<EntryO>.from(entity.allEntries.map((model)=> EntryO.fromEntity(model)));
-    return AllEntriesO(entries);
+    return AllEntriesO(
+      entries,
+      entity.monthlyBudget,
+      entity.dailyCaloriesLimit,
+      entity.passMonthlyBudget,
+      entity.passDailyCaloriesLimit
+    );
   }
 }

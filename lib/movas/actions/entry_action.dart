@@ -12,27 +12,12 @@ class EntryAction {
   factory EntryAction.of(BuildContext context) => EntryAction(
       StaticProvider.of(context));
 
-  Future<void> getEntries() async {
-    return service.getEntries(GetEntriesRequest());
+  Future<void> getEntries({DateTime? fromDate, DateTime? toDate}) async {
+    return service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
   }
 
   Future<void> createEntry(FoodEntry newEntry) async {
     return service.createEntry(CreateEntryRequest());
   }
-
-  Future<void> updateEntry(
-      String id,
-      String name,
-      double calories,
-      double price,
-      String userId,
-      DateTime createdAt) async {
-    return;
-  }
-
-  Future<void> deleteEntry(String entryId) async {
-    return;
-  }
-
 
 }

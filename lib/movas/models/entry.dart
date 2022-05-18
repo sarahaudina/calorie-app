@@ -1,3 +1,5 @@
+import 'package:calorie_mobile/movas/services/http/model/entry/entry_response.dart';
+
 class FoodEntry {
   final String name;
   final String id;
@@ -12,8 +14,8 @@ class FoodEntry {
     return FoodEntry(
         json['name'],
         json['_id'],
-        json['calories'],
-        json['price']!=null? json['price']: 0,
+        json['calories']*1.0,
+        json['price']!=null? json['price']*1.0 : 0,
         json['userId'],
         DateTime.parse(json['createdAt']));
   }
@@ -21,11 +23,21 @@ class FoodEntry {
 
 class AllEntries {
   final List<FoodEntry> allEntries;
+  final double monthlyBudget;
+  final double dailyCaloriesLimit;
+  final bool passMonthlyBudget;
+  final bool passDailyCaloriesLimit;
 
-  factory AllEntries.fromJson(List json) {
-    var entries = List<FoodEntry>.from(json.map((model)=> FoodEntry.fromJson(model)));
-    return AllEntries(entries);
+  factory AllEntries.fromResponse(GetEntriesResponse response) {
+    var entries = List<FoodEntry>.from(response.map.map((model)=> FoodEntry.fromJson(model)));
+    return AllEntries(
+        entries,
+        response.monthlyBudget,
+        response.dailyCaloriesLimit,
+        response.passMonthlyBudget,
+        response.passDailyCaloriesLimit
+    );
   }
 
-  AllEntries(this.allEntries);
+  AllEntries(this.allEntries, this.monthlyBudget, this.dailyCaloriesLimit, this.passMonthlyBudget, this.passDailyCaloriesLimit);
 }
