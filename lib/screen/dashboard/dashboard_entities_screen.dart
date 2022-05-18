@@ -1,9 +1,12 @@
+import 'package:calorie_mobile/movas/observables/entry_o.dart';
 import 'package:calorie_mobile/screen/dashboard/components/entries_table.dart';
 import 'package:calorie_mobile/screen/dashboard/components/large_card.dart';
+import 'package:calorie_mobile/screen/dashboard/components/notification_dialog.dart';
 import 'package:calorie_mobile/screen/dashboard/components/small_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:calorie_mobile/screen/dashboard/components/base_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EntitiesScreen extends StatefulWidget {
 
@@ -16,11 +19,22 @@ class EntitiesScreen extends StatefulWidget {
 }
 
 class EntitiesScreenState extends State<EntitiesScreen> {
-
   String selectedMode = "Daily";
   DateTimeRange? selectedDateRange = null;
   bool hasShowPassedDailyLimitNotification = false;
   bool hasShowPassedMonthlyLimitNotification = false;
+  bool _checkNotification = true;
+
+  checkNotification(AllEntriesO allEntriesO) {
+    if (allEntriesO.passDailyCaloriesLimit && !hasShowPassedDailyLimitNotification)
+      showReminderDialog(context, "Reminder", "You have reached your daily caloty limit.");
+    if (allEntriesO.passMonthlyBudget && !hasShowPassedMonthlyLimitNotification)
+      showReminderDialog(context, "Reminder", "You have reached your monthly budget limit.");
+
+    setState(() {
+      _checkNotification = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +87,13 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                   ],
 
                 ),
-                LargeCard(contentWidget: EntriesTable(), title: "Recent Entries"),
+                LargeCard(contentWidget: Consumer<AllEntriesO>(
+                  builder: (context, entries, __) {
+                    // if (_checkNotification && entries!=null)
+                    //   checkNotification(entries);
+                    return EntriesTable(entries);
+                  }
+                ), title: "Recent Entries"),
               ],
             ))
     );

@@ -16,10 +16,10 @@ class GetEntriesResponse {
       map['totalItems'],
       map['totalPages'],
       map['itemsPerPage'],
-      map[''],
-      map[''],
-      map[''],
-      map['']
+      map['monthlyBudget']*1.0,
+      map['dailyCaloryLimit']*1.0,
+      map['dailyBudgetLimitLeft']>0 ? false : true,
+      map['dailyCaloriesLimitLeft']>0 ? false : true
     );
   }
 }
