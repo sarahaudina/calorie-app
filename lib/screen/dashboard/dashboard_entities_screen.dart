@@ -1,3 +1,4 @@
+import 'package:calorie_mobile/movas/actions/entry_action.dart';
 import 'package:calorie_mobile/movas/observables/entry_o.dart';
 import 'package:calorie_mobile/screen/dashboard/components/entries_chart.dart';
 import 'package:calorie_mobile/screen/dashboard/components/entries_table.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class EntitiesScreen extends StatefulWidget {
 
-  final modes = ["Daily", "Weekly", "Monthly", "Custom"];
+  final modes = ["Daily", "Weekly"];
 
   @override
   State<StatefulWidget> createState() {
@@ -37,57 +38,79 @@ class EntitiesScreenState extends State<EntitiesScreen> {
     });
   }
 
+  resetDateRange() {
+    var monThisWeek = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+    setState(() {
+      selectedDateRange = DateTimeRange(start: monThisWeek, end: monThisWeek.add(Duration(days: 6)));
+    });
+  }
+
+  @override
+  void initState() {
+    resetDateRange();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Container(
+            width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(right: 16, bottom: 16),
             color: Colors.white,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SmallCard(title: "Average", value: "1500", label: "cal"),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    DropdownButton<String>(
-                        items: widget.modes.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue){
-                          setState(() {
-                            selectedMode = newValue!;
-                          });
-                        },
-                        value: selectedMode,
-                    ),
-                    if (selectedMode=="Custom")
-                    InkWell(
-                        onTap: () async {
-                          final picked = await showDateRangePicker(
-                            context: context,
-                            lastDate: new DateTime.now(),
-                            firstDate: new DateTime.now()
-                                .subtract(Duration(days: 1000)),
-                          );
+                DropdownButton<String>(
+                  items: widget.modes.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue){
+                    setState(() {
+                      selectedMode = newValue!;
+                    });
 
-                          setState(() {
-                            selectedDateRange = picked;
-                          });
-
-                        },
-                        child: selectedDateRange==null
-                          ? Text("Selected date")
-                          : Text("${selectedDateRange?.start.toString()} to"
-                            "${selectedDateRange?.end.toString()}"))
-                  ],
-
+                    if (newValue=="Weekly") {
+                      resetDateRange();
+                      EntryAction.of(context).getEntries(
+                          fromDate: selectedDateRange?.start,
+                          toDate: selectedDateRange?.end
+                      );
+                    } else {
+                      EntryAction.of(context).getEntries(
+                          fromDate: DateTime.now(),
+                          toDate: DateTime.now()
+                      );
+                    }
+                  },
+                  value: selectedMode,
                 ),
+                InkWell(
+                    onTap: () async {
+                      if (selectedMode!="Daily") {
+                        showDateRangePicker(
+                          context: context,
+                          lastDate: new DateTime.now(),
+                          firstDate: new DateTime.now()
+                              .subtract(Duration(days: 1000)),
+                        ).then((value) => setState(() {
+                          selectedDateRange = value;
+                          EntryAction.of(context).getEntries(
+                              fromDate: selectedDateRange?.start,
+                              toDate: selectedDateRange?.end
+                          );
+                        }));
+                      }
+                    },
+                    child: selectedMode=="Daily"
+                        ? Text("Today")
+                        : Text("${selectedDateRange?.start.toString()} to"
+                        "${selectedDateRange?.end.toString()}")),
+
                 if (selectedMode=="Weekly")
                   LargeCard(contentWidget: Consumer<AllEntriesO>(
                     builder: (context, entries, __) {
@@ -99,13 +122,6 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                     }
                   ), title: "")
 
-                // LargeCard(contentWidget: Consumer<AllEntriesO>(
-                //   builder: (context, entries, __) {
-                //     // if (_checkNotification && entries!=null)
-                //     //   checkNotification(entries);
-                //     return EntriesTable(entries);
-                //   }
-                // ), title: "Recent Entries"),
               ],
             ))
     );

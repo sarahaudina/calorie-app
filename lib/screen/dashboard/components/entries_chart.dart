@@ -215,7 +215,7 @@ class EntriesChartState extends State<EntriesChart> {
   }
 
   List<BarChartGroupData> showingGroups() {
-    showingBarGroups = List.generate(
+    var showingBarGroups = List.generate(
         widget.endDate.difference(widget.startDate).inDays+1, (index) => makeGroupData(index, 0));
 
     for (var i in widget.allEntriesO.allEntries) {
