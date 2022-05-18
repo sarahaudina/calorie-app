@@ -56,88 +56,109 @@ class EntitiesScreenState extends State<EntitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(right: 16, left: 16),
-            color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                DropdownButton<String>(
-                  items: widget.modes.map((String items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Text(items),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue){
-                    setState(() {
-                      selectedMode = newValue!;
-                    });
-
-                    if (newValue=="Weekly") {
-                      updateDateRange(getDefaultDateRange());
-                    } else {
-                      updateDateRange(dateRangeForToday());
-                    }
-
-                  },
-                  value: selectedMode,
-                ),
-                InkWell(
-                    onTap: () async {
-                      if (selectedMode!="Daily") {
-                        showDateRangePicker(
-                          context: context,
-                          lastDate: new DateTime.now(),
-                          firstDate: new DateTime.now()
-                              .subtract(Duration(days: 1000)),
-                        ).then((value) {
-                          if (value!=null) {
-                            updateDateRange(selectedDateRange);
-                          }
-                        });
-                      }
-                    },
-                    child: selectedMode=="Daily"
-                        ? Column(
+    return Scaffold(
+        extendBodyBehindAppBar: false,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(88.0),
+          child: AppBar(
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.pin,
+              centerTitle: true,
+              background: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.only(right: 16, left: 16, top: 8),
+                  color: Colors.white,
+                  child: Column(
                       mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Today"),
-                            Text(dateFormat.format(DateTime.now()))
-                          ],
-                        )
-                        : Padding(
-                          padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 40,
                           child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                            children: [
-                              InkWell(
-                                  onTap: (){
-                                    var weekBeforeCurrent = DateTimeRange(
-                                        start: selectedDateRange.start.subtract(Duration(days: 7)),
-                                        end: selectedDateRange.end.subtract(Duration(days: 7)));
-                                    updateDateRange(weekBeforeCurrent);
-                                  },
-                                  child: Icon(Icons.arrow_left)),
-                              Text("${dateFormat.format(selectedDateRange.start)} - "
-                              "${dateFormat.format(selectedDateRange.end)}"),
-                              InkWell(
-                                  onTap: (){
-                                    var weekAfterCurrent = DateTimeRange(
-                                        start: selectedDateRange.start.add(Duration(days: 7)),
-                                        end: selectedDateRange.end.add(Duration(days: 7)));
-                                    updateDateRange(weekAfterCurrent);
-                                  },
-                                  child: Icon(Icons.arrow_right)),
-                            ],
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: widget.modes.map((String item) {
+                              return InkWell(
+                                onTap: (){
+                                    setState(() {
+                                        selectedMode = item;
+                                    });
+
+                                    if (item=="Weekly") {
+                                        updateDateRange(getDefaultDateRange());
+                                    } else {
+                                        updateDateRange(dateRangeForToday());
+                                    }
+                                },
+                                child: Text(item, style: TextStyle(
+                                  color: selectedMode==item
+                                      ? Theme.of(context).accentColor
+                                      : Theme.of(context).textTheme.bodyText1?.color
+                                ),),
+                              );
+                            }).toList(),
                           ),
-                        )),
-                Consumer<AllEntriesO>(
+                        ),
+                        Divider(),
+                        InkWell(
+                            onTap: () async {
+                              if (selectedMode!="Daily") {
+                                showDateRangePicker(
+                                  context: context,
+                                  lastDate: new DateTime.now(),
+                                  firstDate: new DateTime.now()
+                                      .subtract(Duration(days: 1000)),
+                                ).then((value) {
+                                  if (value!=null) {
+                                    updateDateRange(selectedDateRange);
+                                  }
+                                });
+                              }
+                            },
+                            child: selectedMode=="Daily"
+                                ? Center(
+                                  child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0, bottom: 12),
+                                    child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                    Text("Today"),
+                                    Text(dateFormat.format(DateTime.now()))
+                              ],
+                            ),
+                                  ),
+                                )
+                                : Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                        onTap: (){
+                                          var weekBeforeCurrent = DateTimeRange(
+                                              start: selectedDateRange.start.subtract(Duration(days: 7)),
+                                              end: selectedDateRange.end.subtract(Duration(days: 7)));
+                                          updateDateRange(weekBeforeCurrent);
+                                        },
+                                        child: Icon(Icons.arrow_left)),
+                                    Text("${dateFormat.format(selectedDateRange.start)} - "
+                                        "${dateFormat.format(selectedDateRange.end)}"),
+                                    InkWell(
+                                        onTap: (){
+                                          var weekAfterCurrent = DateTimeRange(
+                                              start: selectedDateRange.start.add(Duration(days: 7)),
+                                              end: selectedDateRange.end.add(Duration(days: 7)));
+                                          updateDateRange(weekAfterCurrent);
+                                        },
+                                        child: Icon(Icons.arrow_right)),
+                                  ],
+                                ))]
+              )),
+            )),
+        ),
+        body: Consumer<AllEntriesO>(
                     builder: (context, entries, __) {
                       return EntriesChart(
                         allEntriesO: entries,
@@ -148,8 +169,7 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                       );
                     }
                 )
-              ],
-            ))
+
     );
   }
 
