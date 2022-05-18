@@ -1,4 +1,5 @@
 import 'package:calorie_mobile/movas/observables/entry_o.dart';
+import 'package:calorie_mobile/screen/dashboard/components/entries_chart.dart';
 import 'package:calorie_mobile/screen/dashboard/components/entries_table.dart';
 import 'package:calorie_mobile/screen/dashboard/components/large_card.dart';
 import 'package:calorie_mobile/screen/dashboard/components/notification_dialog.dart';
@@ -87,13 +88,24 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                   ],
 
                 ),
-                LargeCard(contentWidget: Consumer<AllEntriesO>(
-                  builder: (context, entries, __) {
-                    // if (_checkNotification && entries!=null)
-                    //   checkNotification(entries);
-                    return EntriesTable(entries);
-                  }
-                ), title: "Recent Entries"),
+                if (selectedMode=="Weekly")
+                  LargeCard(contentWidget: Consumer<AllEntriesO>(
+                    builder: (context, entries, __) {
+                      return EntriesChart(
+                          allEntriesO: entries,
+                          showDay: true,
+                          startDate: DateTime.now(),
+                          endDate: DateTime.now());
+                    }
+                  ), title: "")
+
+                // LargeCard(contentWidget: Consumer<AllEntriesO>(
+                //   builder: (context, entries, __) {
+                //     // if (_checkNotification && entries!=null)
+                //     //   checkNotification(entries);
+                //     return EntriesTable(entries);
+                //   }
+                // ), title: "Recent Entries"),
               ],
             ))
     );

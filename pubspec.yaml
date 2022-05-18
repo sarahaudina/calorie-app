@@ -48,7 +48,7 @@ dev_dependencies:
 
   shared_preferences: ^2.0.13
   # charts & graphs deps :
-  fl_chart: ^0.36.1
+  fl_chart: ^0.50.6
   data_table_2: ^2.0.3
   # networks deps :
   dio: ^4.0.4
