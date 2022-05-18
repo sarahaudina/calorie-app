@@ -17,7 +17,13 @@ class EntryAction {
   }
 
   Future<void> createEntry(FoodEntry newEntry) async {
-    return service.createEntry(CreateEntryRequest());
+    return service.createEntry(CreateEntryRequest(
+      name: newEntry.name,
+      createdAt: newEntry.createdAt,
+      price: newEntry.price,
+      calories: newEntry.calories,
+      userId: newEntry.userId
+    ));
   }
 
 }

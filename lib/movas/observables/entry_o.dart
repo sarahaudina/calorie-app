@@ -13,7 +13,7 @@ class EntryO {
   factory EntryO.fromEntity(FoodEntry entity) {
     return EntryO(
         entity.name,
-        entity.id, entity.calories, entity.price,
+        entity.id!, entity.calories, entity.price!,
         entity.userId, entity.createdAt);
   }
 }

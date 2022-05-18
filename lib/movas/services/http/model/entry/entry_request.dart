@@ -32,12 +32,33 @@ class GetEntriesRequest extends BaseHttpRequest {
 }
 
 class CreateEntryRequest extends BaseHttpRequest {
-  CreateEntryRequest() : super(endpoint: "");
+  CreateEntryRequest(
+      {required this.name, required this.calories, this.price, required this.userId, required this.createdAt})
+      : super(
+        endpoint: "/entries",
+        contentType: Headers.jsonContentType,
+        useToken: true);
+
+  final String name;
+  final double calories;
+  final double? price;
+  final String userId;
+  final DateTime createdAt;
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    var map = {
+      "name":name,
+      "calories":calories,
+      "userId":userId,
+      "createdAt":createdAt.toString()
+    };
+
+    if (price!=null) {
+      map['price'] = price!;
+    }
+
+    return map;
   }
 }
 

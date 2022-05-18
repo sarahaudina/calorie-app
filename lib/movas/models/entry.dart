@@ -2,9 +2,9 @@ import 'package:calorie_mobile/movas/services/http/model/entry/entry_response.da
 
 class FoodEntry {
   final String name;
-  final String id;
+  final String? id;
   final double calories;
-  final double price;
+  final double? price;
   final String userId;
   final DateTime createdAt;
 

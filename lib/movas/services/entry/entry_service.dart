@@ -12,9 +12,29 @@ class EntryService extends BaseEntryService {
   EntryService(this.allEntriesE, this.httpService);
 
   @override
-  Future<void> createEntry(CreateEntryRequest request) {
-    // TODO: implement createEntry
-    throw UnimplementedError();
+  Future<void> createEntry(CreateEntryRequest request) async {
+    try {
+      var response = await httpService.post(
+          request: request,
+          converter: (_) {
+            print("createEntry $_");
+            return _;
+          });
+
+      if (response?['statusCode'] == 200) {
+        // show dialog success
+
+      } else {
+        // show dialog failed
+
+      }
+    } catch (_) {
+      // show dialog failed
+      print("createEntry $_");
+
+    }
+
+    return;
   }
 
   @override
