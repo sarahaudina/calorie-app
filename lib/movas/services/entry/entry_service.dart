@@ -1,5 +1,6 @@
 import 'package:calorie_mobile/main.dart';
 import 'package:calorie_mobile/movas/models/entry.dart';
+import 'package:calorie_mobile/movas/observables/entry_o.dart';
 import 'package:calorie_mobile/movas/services/entry/base_entry_service.dart';
 import 'package:calorie_mobile/movas/services/http/base_http_service.dart';
 import 'package:calorie_mobile/movas/services/http/model/entry/entry_request.dart';
@@ -61,6 +62,11 @@ class EntryService extends BaseEntryService {
 
       return;
     }
+  }
+
+  @override
+  Future<void> resetEntries() async {
+    return allEntriesE.add(AllEntries([], 0, 0, false, false));
   }
 
 }

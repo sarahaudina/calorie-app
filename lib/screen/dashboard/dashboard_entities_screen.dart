@@ -38,6 +38,8 @@ class EntitiesScreenState extends State<EntitiesScreen> {
   }
 
   updateDateRange(DateTimeRange newDateTimeRange) {
+    EntryAction.of(context).resetEntries();
+
     setState(() {
       selectedDateRange = newDateTimeRange;
     });
@@ -61,6 +63,7 @@ class EntitiesScreenState extends State<EntitiesScreen> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(88.0),
           child: AppBar(
+            elevation: 2,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               centerTitle: true,
@@ -158,17 +161,45 @@ class EntitiesScreenState extends State<EntitiesScreen> {
               )),
             )),
         ),
-        body: Consumer<AllEntriesO>(
-                    builder: (context, entries, __) {
-                      return EntriesChart(
-                        allEntriesO: entries,
-                        showDay: selectedDateRange?.duration.inDays==6,
-                        startDate: selectedDateRange?.start ?? DateTime.now(),
-                        endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
-                        dailyCalLimit: entries.dailyCaloriesLimit,
-                      );
-                    }
-                )
+        body: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Consumer<AllEntriesO>(
+                      builder: (context, entries, __) {
+                        return Column(
+                          children: [
+                            EntriesChart(
+                              allEntriesO: entries,
+                              showDay: selectedDateRange?.duration.inDays==6,
+                              startDate: selectedDateRange?.start ?? DateTime.now(),
+                              endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
+                              dailyCalLimit: entries.dailyCaloriesLimit,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Theme.of(context).backgroundColor,
+                              ),
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Average input: 123 cal"),
+                                  Container(height: 5,),
+                                  Text("Average daily : 2342 cal"),
+                                  Container(height: 5,),
+                                  Text("Daily remaining calory limit : ${entries.dailyCaloriesLimit} cal of ${entries.dailyCaloriesLimit} cal"),
+                                  Container(height: 5,),
+                                  Text("Remaining monthly budget : \$${entries.monthlyBudget} of \$${entries.monthlyBudget}")
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                  ),
+        )
 
     );
   }

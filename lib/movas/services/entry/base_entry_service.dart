@@ -2,6 +2,8 @@ import 'package:calorie_mobile/movas/services/http/model/entry/entry_request.dar
 
 abstract class BaseEntryService {
 
+  Future<void> resetEntries();
+
   Future<void> getEntries(GetEntriesRequest request);
 
   Future<void> createEntry(CreateEntryRequest request);

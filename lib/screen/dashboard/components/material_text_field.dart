@@ -12,8 +12,9 @@ class MaterialTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(color: Colors.white),
-      padding: new EdgeInsets.all(20.0),
+      padding: new EdgeInsets.symmetric(vertical: 10.0),
       child: Stack(
         children: <Widget>[
           Container(
@@ -21,7 +22,7 @@ class MaterialTextField extends StatelessWidget {
             child: TextField(
               enabled: !disable,
               controller: controller,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               decoration: InputDecoration(
                 labelText: hint ?? "",
                 labelStyle: TextStyle(

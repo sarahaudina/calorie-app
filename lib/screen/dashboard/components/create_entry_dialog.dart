@@ -17,39 +17,42 @@ Future<void> createEntryDialog(
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text("Add Entry"),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              MaterialTextField(
-                label: "Food Name",
-                hint: "What did you eat",
-                controller: foodNameController,
-              ),
-              MaterialTextField(
-                label: "Total Calories",
-                hint: "Total Calories",
-                controller: totalCaloriesController,
-              ),
-              MaterialTextField(
-                label: "Price (USD)",
-                hint: "Price",
-                controller: priceController,
-              ),
-              InkWell(
-                onTap: () => showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now().subtract(Duration(days: 100)),
-                    lastDate: DateTime.now().add(Duration(days: 0)))
-                  .then((value) => datePickerController.text = value.toString()),
-                child: MaterialTextField(
-                  label: "Date",
-                  hint: "Eat Date",
-                  disable: true,
-                  controller: datePickerController,
+        content: Container(
+          width: MediaQuery.of(context).size.width,
+          child: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                MaterialTextField(
+                  label: "Food Name",
+                  hint: "What did you eat",
+                  controller: foodNameController,
                 ),
-              ),
-            ],
+                MaterialTextField(
+                  label: "Total Calories",
+                  hint: "Total Calories",
+                  controller: totalCaloriesController,
+                ),
+                MaterialTextField(
+                  label: "Price (USD)",
+                  hint: "Price",
+                  controller: priceController,
+                ),
+                InkWell(
+                  onTap: () => showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now().subtract(Duration(days: 100)),
+                      lastDate: DateTime.now().add(Duration(days: 0)))
+                    .then((value) => datePickerController.text = value.toString()),
+                  child: MaterialTextField(
+                    label: "Date",
+                    hint: "Eat Date",
+                    disable: true,
+                    controller: datePickerController,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         actions: <Widget>[

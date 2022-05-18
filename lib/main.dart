@@ -26,7 +26,10 @@ class MyApp extends StatelessWidget {
             primaryColor: Color(0x5465FF),
             focusColor: Color(0xE2FDFF),
             accentColor: Colors.deepPurple,
-            backgroundColor: Color(0xBFD7FF),
+            backgroundColor: Colors.white,
+            scaffoldBackgroundColor: Colors.grey.shade100,
+            primaryColorDark: Colors.black,
+            primaryColorLight: Colors.white,
             textSelectionColor: Colors.black,
             textTheme: TextTheme(
               titleSmall: TextStyle(

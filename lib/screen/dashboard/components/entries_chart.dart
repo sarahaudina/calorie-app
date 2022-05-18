@@ -67,7 +67,7 @@ class EntriesChartState extends State<EntriesChart> {
         child: Card(
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          color: Color(0xff2c4260),
+          color: Theme.of(context).backgroundColor,
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -84,7 +84,7 @@ class EntriesChartState extends State<EntriesChart> {
                       maxY: maxY ?? widget.dailyCalLimit,
                       barTouchData: BarTouchData(
                         touchTooltipData: BarTouchTooltipData(
-                          tooltipBgColor: Colors.grey,
+                          tooltipBgColor: Colors.black,
                           getTooltipItem: (_a, _b, _c, _d) => null,
                         ),
                       ),
@@ -115,8 +115,8 @@ class EntriesChartState extends State<EntriesChart> {
                       borderData: FlBorderData(
                         show: true,
                         border: Border(
-                          left: BorderSide(width: 1.0, color: Colors.white),
-                          bottom: BorderSide(width: 1.0, color: Colors.white),
+                          left: BorderSide(width: 0.5, color: Theme.of(context).primaryColorDark),
+                          bottom: BorderSide(width: 0.5, color: Theme.of(context).primaryColorDark),
                         )
                       ),
                       barGroups: showingBarGroups,
@@ -138,9 +138,9 @@ class EntriesChartState extends State<EntriesChart> {
 
   Widget leftTitles(double value, TitleMeta meta) {
     // return Container();
-    const style = TextStyle(
-      color: Color(0xff7589a2),
-      fontWeight: FontWeight.bold,
+    var style = TextStyle(
+      color: Theme.of(context).primaryColorDark,
+      fontWeight: FontWeight.w800,
       fontSize: 10,
     );
     String text = "";
@@ -149,7 +149,9 @@ class EntriesChartState extends State<EntriesChart> {
     } else if (value == 0) {
       text = '0 cal';
     } else if (value == maxY) {
-      text = '$value cal';
+      text = '${value.toInt()}';
+    } else if (value == widget.dailyCalLimit) {
+      text = '${value.toInt()}\n(daily limit)';
     } else {
       return Container();
     }
@@ -161,26 +163,23 @@ class EntriesChartState extends State<EntriesChart> {
 
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-      fontSize: 8,
+    var style = TextStyle(
+      color: Theme.of(context).primaryColorDark,
+      fontWeight: FontWeight.w800,
+      fontSize: 10,
     );
 
-    Widget text;
+    String text;
+
+    var day = widget.startDate.add(Duration(days: value.toInt())).day;
+    var month = widget.startDate.add(Duration(days: value.toInt())).month;
+    text = "$day/$month";
 
     if (widget.showDay) {
-      text = Text(
-        dayLabels[value.toInt()],
-        style: style,
-      );
-    } else {
-        var day = widget.startDate.add(Duration(days: value.toInt())).day;
-        var month = widget.startDate.add(Duration(days: value.toInt())).month;
-        text = Text("$day/$month", style: style,);
+      text = dayLabels[value.toInt()] + "\n" + text;
     }
 
-    return Padding(padding: const EdgeInsets.only(top: 20), child: text);
+    return Padding(padding: const EdgeInsets.only(top: 10), child: Text(text, style: style, textAlign: TextAlign.center,));
   }
 
   BarChartGroupData makeGroupData(int x, double y1) {

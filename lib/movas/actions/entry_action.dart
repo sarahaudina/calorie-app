@@ -12,6 +12,10 @@ class EntryAction {
   factory EntryAction.of(BuildContext context) => EntryAction(
       StaticProvider.of(context));
 
+  Future<void> resetEntries() async {
+    return service.resetEntries();
+  }
+
   Future<void> getEntries({DateTime? fromDate, DateTime? toDate}) async {
     return service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
   }
