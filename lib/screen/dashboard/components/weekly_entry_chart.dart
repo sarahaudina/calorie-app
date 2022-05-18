@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class EntriesChart extends StatefulWidget {
+class WeeklyEntryChart extends StatefulWidget {
   final AllEntriesO allEntriesO;
   final bool showDay;
   final DateTime startDate;
@@ -11,7 +11,7 @@ class EntriesChart extends StatefulWidget {
   final double dailyCalLimit;
 
 
-  EntriesChart({
+  WeeklyEntryChart({
     Key? key,
     required this.allEntriesO,
     this.showDay=true,
@@ -21,11 +21,11 @@ class EntriesChart extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return EntriesChartState();
+    return WeeklyEntryChartState();
   }
 }
 
-class EntriesChartState extends State<EntriesChart> {
+class WeeklyEntryChartState extends State<WeeklyEntryChart> {
   List<BarChartGroupData> showingBarGroups = [];
   final double barWidth = 7;
   final double barSpace = 4;
@@ -34,11 +34,11 @@ class EntriesChartState extends State<EntriesChart> {
 
   @override
   void didUpdateWidget(Widget oldWidget) {
-    if ((oldWidget as EntriesChart).allEntriesO != widget.allEntriesO
-        || (oldWidget as EntriesChart).showDay != widget.showDay
-        || (oldWidget as EntriesChart).startDate != widget.startDate
-        || (oldWidget as EntriesChart).endDate != widget.endDate
-        || (oldWidget as EntriesChart).dailyCalLimit != widget.dailyCalLimit) {
+    if ((oldWidget as WeeklyEntryChart).allEntriesO != widget.allEntriesO
+        || (oldWidget as WeeklyEntryChart).showDay != widget.showDay
+        || (oldWidget as WeeklyEntryChart).startDate != widget.startDate
+        || (oldWidget as WeeklyEntryChart).endDate != widget.endDate
+        || (oldWidget as WeeklyEntryChart).dailyCalLimit != widget.dailyCalLimit) {
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         showingGroups();
       });
@@ -160,7 +160,6 @@ class EntriesChartState extends State<EntriesChart> {
         width: 16,
         child: Text(text, style: style));
   }
-
 
   Widget bottomTitles(double value, TitleMeta meta) {
     var style = TextStyle(

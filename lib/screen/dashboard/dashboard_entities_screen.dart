@@ -1,12 +1,8 @@
 import 'package:calorie_mobile/movas/actions/entry_action.dart';
 import 'package:calorie_mobile/movas/observables/entry_o.dart';
-import 'package:calorie_mobile/screen/dashboard/components/entries_chart.dart';
-import 'package:calorie_mobile/screen/dashboard/components/entries_table.dart';
-import 'package:calorie_mobile/screen/dashboard/components/large_card.dart';
-import 'package:calorie_mobile/screen/dashboard/components/notification_dialog.dart';
-import 'package:calorie_mobile/screen/dashboard/components/small_card.dart';
+import 'package:calorie_mobile/screen/dashboard/components/daily_entry_chart.dart';
+import 'package:calorie_mobile/screen/dashboard/components/weekly_entry_chart.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:calorie_mobile/screen/dashboard/components/base_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -167,13 +163,21 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                       builder: (context, entries, __) {
                         return Column(
                           children: [
-                            EntriesChart(
-                              allEntriesO: entries,
-                              showDay: selectedDateRange?.duration.inDays==6,
-                              startDate: selectedDateRange?.start ?? DateTime.now(),
-                              endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
-                              dailyCalLimit: entries.dailyCaloriesLimit,
-                            ),
+                            if (selectedMode=="Weekly")
+                              WeeklyEntryChart(
+                                allEntriesO: entries,
+                                showDay: selectedDateRange?.duration.inDays==6,
+                                startDate: selectedDateRange?.start ?? DateTime.now(),
+                                endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
+                                dailyCalLimit: entries.dailyCaloriesLimit,
+                              )
+                            else if (selectedMode=="Daily")
+                              DailyEntryChart(
+                                allEntriesO: entries,
+                                selectedDate: selectedDateRange?.start ?? DateTime.now(),
+                                dailyCalLimit: entries.dailyCaloriesLimit,
+                              ),
+                          if (selectedMode=="Weekly")
                             Container(
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.all(4),
