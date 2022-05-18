@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:calorie_mobile/screen/dashboard/components/base_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class EntitiesScreen extends StatefulWidget {
 
@@ -22,26 +23,34 @@ class EntitiesScreen extends StatefulWidget {
 
 class EntitiesScreenState extends State<EntitiesScreen> {
   String selectedMode = "Daily";
-  DateTimeRange? selectedDateRange = null;
+  late DateTimeRange selectedDateRange;
   bool hasShowPassedDailyLimitNotification = false;
   bool hasShowPassedMonthlyLimitNotification = false;
+  final DateFormat dateFormat = DateFormat("dd MMM yy");
 
-  resetDateRange() {
+  DateTimeRange getDefaultDateRange() {
     var monThisWeek = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
-    setState(() {
-      selectedDateRange = DateTimeRange(start: monThisWeek, end: monThisWeek.add(Duration(days: 6)));
-    });
+    return DateTimeRange(start: monThisWeek, end: monThisWeek.add(Duration(days: 6)));
   }
 
-  dateRangeForToday() {
+  DateTimeRange dateRangeForToday() {
+    return DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  }
+
+  updateDateRange(DateTimeRange newDateTimeRange) {
     setState(() {
-      selectedDateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
+      selectedDateRange = newDateTimeRange;
     });
+
+    EntryAction.of(context).getEntries(
+        fromDate: selectedDateRange?.start,
+        toDate: selectedDateRange?.end
+    );
   }
 
   @override
   void initState() {
-    resetDateRange();
+    updateDateRange(getDefaultDateRange());
     super.initState();
   }
 
@@ -50,7 +59,7 @@ class EntitiesScreenState extends State<EntitiesScreen> {
     return SafeArea(
         child: Container(
             width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(right: 16, bottom: 16),
+            margin: EdgeInsets.only(right: 16, left: 16),
             color: Colors.white,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -69,15 +78,11 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                     });
 
                     if (newValue=="Weekly") {
-                      resetDateRange();
+                      updateDateRange(getDefaultDateRange());
                     } else {
-                      dateRangeForToday();
+                      updateDateRange(dateRangeForToday());
                     }
 
-                    EntryAction.of(context).getEntries(
-                        fromDate: selectedDateRange?.start,
-                        toDate: selectedDateRange?.end
-                    );
                   },
                   value: selectedMode,
                 ),
@@ -89,31 +94,60 @@ class EntitiesScreenState extends State<EntitiesScreen> {
                           lastDate: new DateTime.now(),
                           firstDate: new DateTime.now()
                               .subtract(Duration(days: 1000)),
-                        ).then((value) => setState(() {
-                          selectedDateRange = value;
-                          EntryAction.of(context).getEntries(
-                              fromDate: selectedDateRange?.start,
-                              toDate: selectedDateRange?.end
-                          );
-                        }));
+                        ).then((value) {
+                          if (value!=null) {
+                            updateDateRange(selectedDateRange);
+                          }
+                        });
                       }
                     },
                     child: selectedMode=="Daily"
-                        ? Text("Today")
-                        : Text("${selectedDateRange?.start.toString()} to"
-                        "${selectedDateRange?.end.toString()}")),
-                  LargeCard(contentWidget:
+                        ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Today"),
+                            Text(dateFormat.format(DateTime.now()))
+                          ],
+                        )
+                        : Padding(
+                          padding: const EdgeInsets.only(top: 4.0, bottom: 16),
+                          child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                            children: [
+                              InkWell(
+                                  onTap: (){
+                                    var weekBeforeCurrent = DateTimeRange(
+                                        start: selectedDateRange.start.subtract(Duration(days: 7)),
+                                        end: selectedDateRange.end.subtract(Duration(days: 7)));
+                                    updateDateRange(weekBeforeCurrent);
+                                  },
+                                  child: Icon(Icons.arrow_left)),
+                              Text("${dateFormat.format(selectedDateRange.start)} - "
+                              "${dateFormat.format(selectedDateRange.end)}"),
+                              InkWell(
+                                  onTap: (){
+                                    var weekAfterCurrent = DateTimeRange(
+                                        start: selectedDateRange.start.add(Duration(days: 7)),
+                                        end: selectedDateRange.end.add(Duration(days: 7)));
+                                    updateDateRange(weekAfterCurrent);
+                                  },
+                                  child: Icon(Icons.arrow_right)),
+                            ],
+                          ),
+                        )),
                 Consumer<AllEntriesO>(
                     builder: (context, entries, __) {
                       return EntriesChart(
-                          allEntriesO: entries,
-                          showDay: selectedDateRange?.duration.inDays==6,
-                          startDate: selectedDateRange?.start ?? DateTime.now(),
-                          endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
-                          dailyCalLimit: entries.dailyCaloriesLimit,
+                        allEntriesO: entries,
+                        showDay: selectedDateRange?.duration.inDays==6,
+                        startDate: selectedDateRange?.start ?? DateTime.now(),
+                        endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
+                        dailyCalLimit: entries.dailyCaloriesLimit,
                       );
                     }
-                  ), title: "")
+                )
               ],
             ))
     );
