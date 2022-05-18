@@ -25,18 +25,6 @@ class EntitiesScreenState extends State<EntitiesScreen> {
   DateTimeRange? selectedDateRange = null;
   bool hasShowPassedDailyLimitNotification = false;
   bool hasShowPassedMonthlyLimitNotification = false;
-  bool _checkNotification = true;
-
-  checkNotification(AllEntriesO allEntriesO) {
-    if (allEntriesO.passDailyCaloriesLimit && !hasShowPassedDailyLimitNotification)
-      showReminderDialog(context, "Reminder", "You have reached your daily caloty limit.");
-    if (allEntriesO.passMonthlyBudget && !hasShowPassedMonthlyLimitNotification)
-      showReminderDialog(context, "Reminder", "You have reached your monthly budget limit.");
-
-    setState(() {
-      _checkNotification = false;
-    });
-  }
 
   resetDateRange() {
     var monThisWeek = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
@@ -64,77 +52,69 @@ class EntitiesScreenState extends State<EntitiesScreen> {
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(right: 16, bottom: 16),
             color: Colors.white,
-            child: Expanded(
-              // height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  DropdownButton<String>(
-                    items: widget.modes.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue){
-                      setState(() {
-                        selectedMode = newValue!;
-                      });
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                DropdownButton<String>(
+                  items: widget.modes.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue){
+                    setState(() {
+                      selectedMode = newValue!;
+                    });
 
-                      if (newValue=="Weekly") {
-                        resetDateRange();
-                      } else {
-                        dateRangeForToday();
+                    if (newValue=="Weekly") {
+                      resetDateRange();
+                    } else {
+                      dateRangeForToday();
+                    }
+
+                    EntryAction.of(context).getEntries(
+                        fromDate: selectedDateRange?.start,
+                        toDate: selectedDateRange?.end
+                    );
+                  },
+                  value: selectedMode,
+                ),
+                InkWell(
+                    onTap: () async {
+                      if (selectedMode!="Daily") {
+                        showDateRangePicker(
+                          context: context,
+                          lastDate: new DateTime.now(),
+                          firstDate: new DateTime.now()
+                              .subtract(Duration(days: 1000)),
+                        ).then((value) => setState(() {
+                          selectedDateRange = value;
+                          EntryAction.of(context).getEntries(
+                              fromDate: selectedDateRange?.start,
+                              toDate: selectedDateRange?.end
+                          );
+                        }));
                       }
-
-                      EntryAction.of(context).getEntries(
-                          fromDate: selectedDateRange?.start,
-                          toDate: selectedDateRange?.end
-                      );
                     },
-                    value: selectedMode,
-                  ),
-                  InkWell(
-                      onTap: () async {
-                        if (selectedMode!="Daily") {
-                          showDateRangePicker(
-                            context: context,
-                            lastDate: new DateTime.now(),
-                            firstDate: new DateTime.now()
-                                .subtract(Duration(days: 1000)),
-                          ).then((value) => setState(() {
-                            selectedDateRange = value;
-                            EntryAction.of(context).getEntries(
-                                fromDate: selectedDateRange?.start,
-                                toDate: selectedDateRange?.end
-                            );
-                          }));
-                        }
-                      },
-                      child: selectedMode=="Daily"
-                          ? Text("Today")
-                          : Text("${selectedDateRange?.start.toString()} to"
-                          "${selectedDateRange?.end.toString()}")),
-                    LargeCard(contentWidget: Consumer<AllEntriesO>(
-                      builder: (context, entries, __) {
-                        var temp = entries;
-                        temp.allEntries
-                            .sort((a, b) => a.calories.compareTo(b.calories));
-                        double maxy = temp.allEntries.length>0 ? temp.allEntries[0].calories*1.0 : 0.0;
-
-                        return EntriesChart(
-                            allEntriesO: entries,
-                            showDay: selectedDateRange?.duration.inDays==7,
-                            startDate: selectedDateRange?.start ?? DateTime.now(),
-                            endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
-                            maxY: maxy,
-                            dailyCalLimit: entries.dailyCaloriesLimit,
-                        );
-                      }
-                    ), title: "")
-                ],
-              ),
+                    child: selectedMode=="Daily"
+                        ? Text("Today")
+                        : Text("${selectedDateRange?.start.toString()} to"
+                        "${selectedDateRange?.end.toString()}")),
+                  LargeCard(contentWidget:
+                Consumer<AllEntriesO>(
+                    builder: (context, entries, __) {
+                      return EntriesChart(
+                          allEntriesO: entries,
+                          showDay: selectedDateRange?.duration.inDays==6,
+                          startDate: selectedDateRange?.start ?? DateTime.now(),
+                          endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
+                          dailyCalLimit: entries.dailyCaloriesLimit,
+                      );
+                    }
+                  ), title: "")
+              ],
             ))
     );
   }

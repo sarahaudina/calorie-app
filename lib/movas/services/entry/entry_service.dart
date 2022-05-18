@@ -1,8 +1,10 @@
+import 'package:calorie_mobile/main.dart';
 import 'package:calorie_mobile/movas/models/entry.dart';
 import 'package:calorie_mobile/movas/services/entry/base_entry_service.dart';
 import 'package:calorie_mobile/movas/services/http/base_http_service.dart';
 import 'package:calorie_mobile/movas/services/http/model/entry/entry_request.dart';
 import 'package:calorie_mobile/movas/services/http/model/entry/entry_response.dart';
+import 'package:calorie_mobile/screen/dashboard/components/notification_dialog.dart';
 import 'package:movas/movas.dart';
 
 class EntryService extends BaseEntryService {
@@ -14,6 +16,7 @@ class EntryService extends BaseEntryService {
   @override
   Future<void> createEntry(CreateEntryRequest request) async {
     try {
+      print('createEntry ${request.toMap().toString()}');
       var response = await httpService.post(
           request: request,
           converter: (_) {
@@ -21,7 +24,7 @@ class EntryService extends BaseEntryService {
             return _;
           });
 
-      if (response?['statusCode'] == 200) {
+      if (response['statusCode'] == 200) {
         // show dialog success
 
       } else {
@@ -46,7 +49,17 @@ class EntryService extends BaseEntryService {
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {
-      return allEntriesE.add(AllEntries.fromResponse(response));
+      var allEntries = AllEntries.fromResponse(response);
+      allEntriesE.add(allEntries);
+
+      if (allEntries.passDailyCaloriesLimit) {
+        showDailyLimitReachedReminder(navigatorKey.currentContext!);
+      }
+      if (allEntries.passMonthlyBudget){
+        showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
+      }
+
+      return;
     }
   }
 

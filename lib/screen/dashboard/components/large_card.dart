@@ -11,25 +11,17 @@ class LargeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          flex: 1,
-            child: BaseCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(title, style: Theme.of(context).textTheme.titleSmall,),
-                    Divider(),
-                    if (contentWidget!=null)
-                      contentWidget
-                  ],
-                ))),
-      ],
-    );
+    return BaseCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleSmall,),
+            Divider(),
+            if (contentWidget!=null)
+              contentWidget
+          ],
+        ));
   }
 
 }

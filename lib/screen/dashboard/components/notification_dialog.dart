@@ -29,3 +29,11 @@ Future<void> showReminderDialog(
     },
   );
 }
+
+Future<void> showDailyLimitReachedReminder(BuildContext context) {
+  return showReminderDialog(context, "Reminder", "You have reached your daily caloty limit.");
+}
+
+Future<void> showMonthlyLimitReachedReminder(BuildContext context) {
+  return showReminderDialog(context, "Reminder", "You have reached your monthly budget limit.");
+}
