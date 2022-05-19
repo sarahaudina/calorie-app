@@ -80,7 +80,7 @@ class DashboardEntryService extends BaseEntryService {
   }
 
   @override
-  Future<void> getEntriesForUser(GetEntriesForUserRequest request) {
+  Future<AllEntries?> getEntriesForUser(GetEntriesForUserRequest request) {
     // TODO: implement getEntriesForUser
     throw UnimplementedError();
   }

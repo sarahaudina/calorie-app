@@ -10,6 +10,8 @@ class Util {
     return false;
   }
 
-  String formatDate(DateTime date) => DateFormat("MMM dd yyyy").format(date);
+  static String formatDate(DateTime date) => DateFormat("MMM dd yyyy").format(date);
+
+  static DateTime parseDate(String date) => DateFormat("MMM dd yyyy").parse(date);
 
 }

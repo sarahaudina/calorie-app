@@ -9,13 +9,12 @@ import 'package:intl/intl.dart';
 
 Future<void> createEntryDialog(
     BuildContext context, {EntryO? existingEntry} ) async {
-  DateTime initialDate = DateTime.now();
-  final TextEditingController datePickerController = TextEditingController()
-    ..text=Util().formatDate(initialDate);
+  final TextEditingController datePickerController = TextEditingController();
   final TextEditingController foodNameController = TextEditingController();
   final TextEditingController totalCaloriesController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController userIdController = TextEditingController();
+  DateTime initialDate = DateTime.now();
 
   if (existingEntry!=null) {
     initialDate = existingEntry.createdAt;
@@ -25,7 +24,7 @@ Future<void> createEntryDialog(
     userIdController.text = existingEntry.userId;
   }
 
-  datePickerController.text=Util().formatDate(initialDate);
+  datePickerController.text=Util.formatDate(initialDate);
 
 
   return showDialog<void>(
@@ -72,7 +71,7 @@ Future<void> createEntryDialog(
                       lastDate: DateTime.now().add(Duration(days: 0)))
                     .then((value) {
                       if (value!=null)
-                        datePickerController.text = Util().formatDate(value);
+                        datePickerController.text = Util.formatDate(value);
                   }),
                   child: MaterialTextField(
                     label: "Date",
@@ -94,17 +93,17 @@ Future<void> createEntryDialog(
                       existingEntry.id,
                       foodNameController.text,
                       double.parse(totalCaloriesController.text),
-                      double.parse(priceController.text),
+                      priceController.text=="" ? null : double.parse(priceController.text),
                       userIdController.text,
-                      DateTime.parse(datePickerController.text))
+                      Util.parseDate(datePickerController.text))
               : EntryAction.of(context).createEntry(
                   FoodEntry(
                       foodNameController.text,
                       null,
                       double.parse(totalCaloriesController.text),
-                      double.parse(priceController.text),
+                      priceController.text=="" ? null : double.parse(priceController.text),
                       userIdController.text,
-                      DateTime.parse(datePickerController.text)));
+                      Util.parseDate(datePickerController.text)));
               Navigator.pop(context, true);
             },
           ),

@@ -64,13 +64,13 @@ class DioHttpService extends BaseHttpService {
 
     final map = request.toMap();
 
-    final response =
-        await dio.get(request.endpoint, queryParameters: map, options: options);
-
     log("get: ${request.endpoint}");
     log("get: ${request.contentType}");
     log("get: ${request.toMap()}");
     log("get: ${map}");
+
+    final response =
+        await dio.get(request.endpoint, queryParameters: map, options: options);
 
     if (converter == null) {
       if (response.data is String) return (jsonDecode(response.data));

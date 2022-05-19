@@ -22,7 +22,7 @@ class EntryAction {
   }
 
   Future<AllEntries?> getEntriesForUser({DateTime? fromDate, DateTime? toDate}) async {
-    var result = await service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
+    var result = await service.getEntriesForUser(GetEntriesForUserRequest(fromDate: fromDate, toDate: toDate));
     return result;
   }
 
@@ -40,7 +40,7 @@ class EntryAction {
       String id,
       String name,
       double calories,
-      double price,
+      double? price,
       String userId,
       DateTime createdAt) async {
     return service.updateEntry(UpdateEntryRequest(

@@ -1,11 +1,11 @@
 import 'package:calorie/config/config.dart';
 
-const String user_id = "628364336c71447b86d650f7";
+const String user_id = "62869285c9c1b87fd05f4def";
 
 class MobileConfig extends Config {
   @override
   String accessToken() {
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI4MzY0MzM2YzcxNDQ3Yjg2ZDY1MGY3IiwiZGFpbHlDYWxvcnlMaW1pdCI6MjEwMCwibW9udGhseUJ1ZGdldCI6MTAwMH0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NTI4MzQzMzgsImV4cCI6MTY1MzE5NDMzOH0.DOOMuEr-mM6YGtaNwLZp-DTMFam0zhM6fCL5G3TApek";
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI4NjkyODVjOWMxYjg3ZmQwNWY0ZGVmIiwiZGFpbHlDYWxvcnlMaW1pdCI6MjEwMCwibW9udGhseUJ1ZGdldCI6MTAwMH0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2NTI5ODY1MTUsImV4cCI6MTY1MzM0NjUxNX0.GWeNOllJ8wDcYe-v4IvztJEzW6JXIWGlhgMHBnoEW9s";
   }
 
   @override

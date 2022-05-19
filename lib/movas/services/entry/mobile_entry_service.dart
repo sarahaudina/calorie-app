@@ -42,7 +42,7 @@ class EntryService extends BaseEntryService {
   }
 
   @override
-  Future<void> getEntriesForUser(GetEntriesForUserRequest request) async {
+  Future<AllEntries?> getEntriesForUser(GetEntriesForUserRequest request) async {
     var response = await httpService.get(
         request: request,
         converter: (_) {
@@ -60,7 +60,7 @@ class EntryService extends BaseEntryService {
         showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
       }
 
-      return;
+      return allEntries;
     }
   }
 
@@ -69,7 +69,7 @@ class EntryService extends BaseEntryService {
     var response = await httpService.get(
         request: request,
         converter: (_) {
-          print("getEntries $_");
+          // print("getEntries $_");
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {
