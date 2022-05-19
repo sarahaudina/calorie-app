@@ -1,4 +1,4 @@
-import 'package:calorie_mobile/screen/dashboard/components/base_card.dart';
+import 'package:calorie/screen/shared_components/base_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class SmallCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 170,
+        width: 250,
         child: BaseCard(child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

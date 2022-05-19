@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class GreenButton extends StatelessWidget {
+class DefaultButton extends StatelessWidget {
   final String title;
   final Function tap;
+  final Color? color;
 
-  const GreenButton(this.title, this.tap);
+  const DefaultButton(this.title, this.tap, {this.color});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => tap,
+      onPressed: () => tap(),
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: Colors.green
+            color: color ?? Colors.green
           ),
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Text(title,

@@ -22,7 +22,6 @@ class BaseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8)
       ),
       padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(left: 16, top: 16),
       child: child,
     );
   }

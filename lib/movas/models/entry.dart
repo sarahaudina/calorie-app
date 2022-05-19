@@ -1,4 +1,4 @@
-import 'package:calorie_mobile/movas/services/http/model/entry/entry_response.dart';
+import 'package:calorie/movas/services/http/model/entry/entry_response.dart';
 
 class FoodEntry {
   final String name;

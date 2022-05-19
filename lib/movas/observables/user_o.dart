@@ -1,4 +1,4 @@
-import 'package:calorie_mobile/movas/models/user.dart';
+import 'package:calorie/movas/models/user.dart';
 
 class UserO {
   final String id;

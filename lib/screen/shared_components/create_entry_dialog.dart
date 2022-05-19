@@ -1,15 +1,18 @@
-import 'package:calorie_mobile/config/config.dart';
-import 'package:calorie_mobile/movas/actions/entry_action.dart';
-import 'package:calorie_mobile/movas/models/entry.dart';
-import 'package:calorie_mobile/screen/dashboard/components/material_text_field.dart';
+import 'package:calorie/movas/actions/entry_action.dart';
+import 'package:calorie/movas/models/entry.dart';
+import 'package:calorie/screen/shared_components/material_text_field.dart';
 import 'package:flutter/material.dart';
 
 Future<void> createEntryDialog(
     BuildContext context ) async {
+
+  print('here');
+
   final TextEditingController datePickerController = TextEditingController();
   final TextEditingController foodNameController = TextEditingController();
   final TextEditingController totalCaloriesController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController userIdController = TextEditingController();
 
   return showDialog<void>(
     context: context,
@@ -22,6 +25,11 @@ Future<void> createEntryDialog(
           child: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
+                MaterialTextField(
+                  label: "User Id",
+                  hint: "User Id",
+                  controller: userIdController,
+                ),
                 MaterialTextField(
                   label: "Food Name",
                   hint: "What did you eat",
@@ -66,7 +74,7 @@ Future<void> createEntryDialog(
                       null,
                       double.parse(totalCaloriesController.text),
                       double.parse(priceController.text),
-                      user_id,
+                      userIdController.text,
                       DateTime.parse(datePickerController.text)));
               Navigator.pop(context, true);
             },

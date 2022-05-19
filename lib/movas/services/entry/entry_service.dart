@@ -1,11 +1,11 @@
-import 'package:calorie_mobile/main.dart';
-import 'package:calorie_mobile/movas/models/entry.dart';
-import 'package:calorie_mobile/movas/observables/entry_o.dart';
-import 'package:calorie_mobile/movas/services/entry/base_entry_service.dart';
-import 'package:calorie_mobile/movas/services/http/base_http_service.dart';
-import 'package:calorie_mobile/movas/services/http/model/entry/entry_request.dart';
-import 'package:calorie_mobile/movas/services/http/model/entry/entry_response.dart';
-import 'package:calorie_mobile/screen/dashboard/components/notification_dialog.dart';
+import 'package:calorie/main.dart';
+import 'package:calorie/movas/models/entry.dart';
+import 'package:calorie/movas/observables/entry_o.dart';
+import 'package:calorie/movas/services/entry/base_entry_service.dart';
+import 'package:calorie/movas/services/http/base_http_service.dart';
+import 'package:calorie/movas/services/http/model/entry/entry_request.dart';
+import 'package:calorie/movas/services/http/model/entry/entry_response.dart';
+import 'package:calorie/screen/mobile/components/notification_dialog.dart';
 import 'package:movas/movas.dart';
 
 class EntryService extends BaseEntryService {
@@ -42,7 +42,7 @@ class EntryService extends BaseEntryService {
   }
 
   @override
-  Future<void> getEntries(GetEntriesRequest request) async {
+  Future<AllEntries?> getEntries(GetEntriesRequest request) async {
     var response = await httpService.get(
         request: request,
         converter: (_) {
@@ -60,13 +60,25 @@ class EntryService extends BaseEntryService {
         showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
       }
 
-      return;
+      return null;
     }
   }
 
   @override
   Future<void> resetEntries() async {
     return allEntriesE.add(AllEntries([], 0, 0, false, false));
+  }
+
+  @override
+  Future<void> deleteEntry(DeleteEntryRequest request) {
+    // TODO: implement deleteEntry
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateEntry(UpdateEntryRequest request) {
+    // TODO: implement updateEntry
+    throw UnimplementedError();
   }
 
 }

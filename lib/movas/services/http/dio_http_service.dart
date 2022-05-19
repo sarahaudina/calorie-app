@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:calorie_mobile/config/config.dart';
-import 'package:calorie_mobile/movas/services/http/base_http_service.dart';
-import 'package:calorie_mobile/movas/services/http/model/base_http_request.dart';
-import 'package:calorie_mobile/movas/stores/auth_store.dart';
+import 'package:calorie/config/config.dart';
+import 'package:calorie/config/mobile_config.dart';
+import 'package:calorie/config/dashboard_config.dart';
+import 'package:calorie/movas/services/http/base_http_service.dart';
+import 'package:calorie/movas/services/http/model/base_http_request.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 
 
 class DioInterceptor extends Interceptor {
-  DioInterceptor();
+  DioInterceptor(this.config);
+  final Config config;
+
 
   @override
   void onRequest(RequestOptions options,
@@ -17,11 +20,8 @@ class DioInterceptor extends Interceptor {
     var headers = {
       "Accept": "application/json",
     };
-
-    print('going for '+options.uri.toString());
-
     if (options.headers["useToken"]) {
-      var accessToken = access_token;
+      var accessToken = config.accessToken();
       headers.addAll({"Authorization": "Bearer $accessToken"});
       options.headers.addAll(headers);
       return handler.next(options);
@@ -30,23 +30,19 @@ class DioInterceptor extends Interceptor {
       log("uri "+ options.uri.toString());
       return handler.next(options);
     }
-
   }
-
-
 }
 
 class DioHttpService extends BaseHttpService {
   final Dio dio;
-  final AuthStore authStore;
+  final Config config;
 
-  DioHttpService(this.dio, this.authStore,
-      {String baseUrl = BASE_URL}) {
-    dio.options.baseUrl = baseUrl;
+  DioHttpService(this.dio, this.config) {
+    dio.options.baseUrl = config.baseUrl();
     dio.options.connectTimeout = 200000; //5s
     dio.options.receiveTimeout = 50000;
     dio.interceptors.addAll([
-      DioInterceptor()
+      DioInterceptor(config)
     ]);
 
   }

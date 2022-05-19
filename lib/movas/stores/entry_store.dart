@@ -1,7 +1,5 @@
-import 'package:calorie_mobile/movas/models/auth_entities.dart';
-import 'package:calorie_mobile/movas/models/entry.dart';
-import 'package:calorie_mobile/movas/observables/authentication_observable.dart';
-import 'package:calorie_mobile/movas/observables/entry_o.dart';
+import 'package:calorie/movas/models/entry.dart';
+import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:movas/movas.dart';
 import 'package:movas/provider/provider.dart';
 

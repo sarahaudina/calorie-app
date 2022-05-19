@@ -1,23 +1,23 @@
-import 'package:calorie_mobile/movas/actions/entry_action.dart';
-import 'package:calorie_mobile/movas/observables/entry_o.dart';
-import 'package:calorie_mobile/screen/dashboard/components/daily_entry_chart.dart';
-import 'package:calorie_mobile/screen/dashboard/components/weekly_entry_chart.dart';
+import 'package:calorie/movas/actions/entry_action.dart';
+import 'package:calorie/movas/observables/entry_o.dart';
+import 'package:calorie/screen/mobile/components/daily_entry_chart.dart';
+import 'package:calorie/screen/mobile/components/weekly_entry_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class EntitiesScreen extends StatefulWidget {
+class EntitiesScreenBody extends StatefulWidget {
 
   final modes = ["Daily", "Weekly"];
 
   @override
   State<StatefulWidget> createState() {
-    return EntitiesScreenState();
+    return EntitiesScreenBodyState();
   }
 }
 
-class EntitiesScreenState extends State<EntitiesScreen> {
+class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
   String selectedMode = "Daily";
   late DateTimeRange selectedDateRange;
   bool hasShowPassedDailyLimitNotification = false;

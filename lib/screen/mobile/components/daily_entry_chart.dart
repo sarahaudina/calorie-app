@@ -1,4 +1,4 @@
-import 'package:calorie_mobile/movas/observables/entry_o.dart';
+import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 

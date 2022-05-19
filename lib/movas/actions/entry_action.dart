@@ -1,6 +1,6 @@
-import 'package:calorie_mobile/movas/models/entry.dart';
-import 'package:calorie_mobile/movas/services/entry/base_entry_service.dart';
-import 'package:calorie_mobile/movas/services/http/model/entry/entry_request.dart';
+import 'package:calorie/movas/models/entry.dart';
+import 'package:calorie/movas/services/entry/base_entry_service.dart';
+import 'package:calorie/movas/services/http/model/entry/entry_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:movas/provider/provider.dart';
 
@@ -16,8 +16,9 @@ class EntryAction {
     return service.resetEntries();
   }
 
-  Future<void> getEntries({DateTime? fromDate, DateTime? toDate}) async {
-    return service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
+  Future<AllEntries?> getEntries({DateTime? fromDate, DateTime? toDate}) async {
+    var result = await service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
+    return result;
   }
 
   Future<void> createEntry(FoodEntry newEntry) async {
@@ -28,6 +29,20 @@ class EntryAction {
       calories: newEntry.calories,
       userId: newEntry.userId
     ));
+  }
+
+  Future<void> updateEntry(
+      String id,
+      String name,
+      double calories,
+      double price,
+      String userId,
+      DateTime createdAt) async {
+    return;
+  }
+
+  Future<void> deleteEntry(String entryId) async {
+    return;
   }
 
 }

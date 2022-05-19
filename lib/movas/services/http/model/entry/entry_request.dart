@@ -1,5 +1,5 @@
-import 'package:calorie_mobile/config/config.dart';
-import 'package:calorie_mobile/movas/services/http/model/base_http_request.dart';
+import 'package:calorie/config/mobile_config.dart';
+import 'package:calorie/movas/services/http/model/base_http_request.dart';
 import 'package:dio/dio.dart';
 
 class GetEntriesRequest extends BaseHttpRequest {

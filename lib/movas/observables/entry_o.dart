@@ -1,4 +1,4 @@
-import 'package:calorie_mobile/movas/models/entry.dart';
+import 'package:calorie/movas/models/entry.dart';
 
 class EntryO {
   final String name;
