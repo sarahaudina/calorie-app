@@ -75,5 +75,11 @@ class DashboardEntryService extends BaseEntryService {
     return allEntriesE.add(AllEntries([], 0, 0, false, false));
   }
 
+  @override
+  Future<void> getEntriesForUser(GetEntriesForUserRequest request) {
+    // TODO: implement getEntriesForUser
+    throw UnimplementedError();
+  }
+
 
 }

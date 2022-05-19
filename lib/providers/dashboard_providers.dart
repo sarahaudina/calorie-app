@@ -8,7 +8,7 @@ import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:calorie/movas/stores/entry_store.dart';
 import 'package:movas/provider/provider.dart';
 import 'package:calorie/movas/services/entry/base_entry_service.dart';
-import 'package:calorie/movas/services/entry/entry_service.dart';
+import 'package:calorie/movas/services/entry/mobile_entry_service.dart';
 import 'package:calorie/movas/services/http/base_http_service.dart';
 import 'package:calorie/movas/services/http/dio_http_service.dart';
 import 'package:dio/dio.dart';

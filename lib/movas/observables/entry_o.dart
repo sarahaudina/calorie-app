@@ -20,10 +20,10 @@ class EntryO {
 
 class AllEntriesO {
   final List<EntryO> allEntries;
-  final double monthlyBudget;
-  final double dailyCaloriesLimit;
-  final bool passMonthlyBudget;
-  final bool passDailyCaloriesLimit;
+  final double? monthlyBudget;
+  final double? dailyCaloriesLimit;
+  final bool? passMonthlyBudget;
+  final bool? passDailyCaloriesLimit;
 
   AllEntriesO(this.allEntries, this.monthlyBudget, this.dailyCaloriesLimit, this.passMonthlyBudget, this.passDailyCaloriesLimit);
 

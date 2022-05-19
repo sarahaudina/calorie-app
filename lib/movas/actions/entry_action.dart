@@ -21,6 +21,11 @@ class EntryAction {
     return result;
   }
 
+  Future<AllEntries?> getEntriesForUser({DateTime? fromDate, DateTime? toDate}) async {
+    var result = await service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
+    return result;
+  }
+
   Future<void> createEntry(FoodEntry newEntry) async {
     return service.createEntry(CreateEntryRequest(
       name: newEntry.name,

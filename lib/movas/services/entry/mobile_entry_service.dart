@@ -42,6 +42,29 @@ class EntryService extends BaseEntryService {
   }
 
   @override
+  Future<void> getEntriesForUser(GetEntriesForUserRequest request) async {
+    var response = await httpService.get(
+        request: request,
+        converter: (_) {
+          print("getEntries $_");
+          return GetEntriesResponse.fromMap(_);
+        });
+    if (response is GetEntriesResponse) {
+      var allEntries = AllEntries.fromResponse(response);
+      allEntriesE.add(allEntries);
+
+      if (allEntries.passDailyCaloriesLimit ?? false) {
+        showDailyLimitReachedReminder(navigatorKey.currentContext!);
+      }
+      if (allEntries.passMonthlyBudget ?? false){
+        showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
+      }
+
+      return;
+    }
+  }
+
+  @override
   Future<AllEntries?> getEntries(GetEntriesRequest request) async {
     var response = await httpService.get(
         request: request,
@@ -53,10 +76,10 @@ class EntryService extends BaseEntryService {
       var allEntries = AllEntries.fromResponse(response);
       allEntriesE.add(allEntries);
 
-      if (allEntries.passDailyCaloriesLimit) {
+      if (allEntries.passDailyCaloriesLimit ?? false) {
         showDailyLimitReachedReminder(navigatorKey.currentContext!);
       }
-      if (allEntries.passMonthlyBudget){
+      if (allEntries.passMonthlyBudget ?? false){
         showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
       }
 

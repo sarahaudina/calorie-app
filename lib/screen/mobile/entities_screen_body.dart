@@ -1,3 +1,4 @@
+import 'package:calorie/config/config.dart';
 import 'package:calorie/movas/actions/entry_action.dart';
 import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:calorie/screen/mobile/components/daily_entry_chart.dart';
@@ -40,7 +41,7 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
       selectedDateRange = newDateTimeRange;
     });
 
-    EntryAction.of(context).getEntries(
+    EntryAction.of(context).getEntriesForUser(
         fromDate: selectedDateRange?.start,
         toDate: selectedDateRange?.end
     );
@@ -169,13 +170,13 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
                                 showDay: selectedDateRange?.duration.inDays==6,
                                 startDate: selectedDateRange?.start ?? DateTime.now(),
                                 endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
-                                dailyCalLimit: entries.dailyCaloriesLimit,
+                                dailyCalLimit: entries.dailyCaloriesLimit ?? defaultCaloriesLimit,
                               )
                             else if (selectedMode=="Daily")
                               DailyEntryChart(
                                 allEntriesO: entries,
                                 selectedDate: selectedDateRange?.start ?? DateTime.now(),
-                                dailyCalLimit: entries.dailyCaloriesLimit,
+                                dailyCalLimit: entries.dailyCaloriesLimit ?? defaultCaloriesLimit,
                               ),
                           if (selectedMode=="Weekly")
                             Container(

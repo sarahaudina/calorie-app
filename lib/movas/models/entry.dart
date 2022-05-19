@@ -23,19 +23,19 @@ class FoodEntry {
 
 class AllEntries {
   final List<FoodEntry> allEntries;
-  final double monthlyBudget;
-  final double dailyCaloriesLimit;
-  final bool passMonthlyBudget;
-  final bool passDailyCaloriesLimit;
+  final double? monthlyBudget;
+  final double? dailyCaloriesLimit;
+  final bool? passMonthlyBudget;
+  final bool? passDailyCaloriesLimit;
 
   factory AllEntries.fromResponse(GetEntriesResponse response) {
     var entries = List<FoodEntry>.from(response.map.map((model)=> FoodEntry.fromJson(model)));
     return AllEntries(
         entries,
-        response.monthlyBudget,
-        response.dailyCaloriesLimit,
-        response.passMonthlyBudget,
-        response.passDailyCaloriesLimit
+        response.monthlyBudget ?? 0,
+        response.dailyCaloriesLimit ?? 0,
+        response.passMonthlyBudget ?? false,
+        response.passDailyCaloriesLimit ?? false
     );
   }
 

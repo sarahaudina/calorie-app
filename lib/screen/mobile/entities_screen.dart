@@ -16,7 +16,7 @@ class EntitiesScreenState extends State<EntitiesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp)
-      => EntryAction.of(context).getEntries());
+      => EntryAction.of(context).getEntriesForUser());
   }
 
   @override
@@ -34,7 +34,7 @@ class EntitiesScreenState extends State<EntitiesScreen> {
               createEntryDialog(context)
                   .then((value) {
                     if (value as bool) {
-                      EntryAction.of(context).getEntries();
+                      EntryAction.of(context).getEntriesForUser();
               }});
             },
             icon: Icon(Icons.add, size: 35.0,),

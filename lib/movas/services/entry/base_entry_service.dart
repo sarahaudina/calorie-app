@@ -12,4 +12,6 @@ abstract class BaseEntryService {
   Future<void> deleteEntry(DeleteEntryRequest request);
 
   Future<void> updateEntry(UpdateEntryRequest request);
+
+  Future<void> getEntriesForUser(GetEntriesForUserRequest request);
 }
