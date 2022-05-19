@@ -93,21 +93,47 @@ class CreateEntryRequest extends BaseHttpRequest {
 }
 
 class UpdateEntryRequest extends BaseHttpRequest {
-  UpdateEntryRequest({required String endpoint}) : super(endpoint: endpoint);
+  final String name;
+  final double calories;
+  final double? price;
+  final String userId;
+  final DateTime createdAt;
+  final String entryId;
+
+  UpdateEntryRequest(
+      {
+        required this.name,
+        required this.calories,
+        required this.price,
+        required this.userId,
+        required this.createdAt,
+        required this.entryId})
+      : super(endpoint: "/entries/$entryId");
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    var map = {
+      "name":name,
+      "calories":calories,
+      "userId":userId,
+      "createdAt":createdAt.toString()
+    };
+
+    if (price!=null) {
+      map['price'] = price!;
+    }
+
+    return map;
   }
 }
 
 class DeleteEntryRequest extends BaseHttpRequest {
-  DeleteEntryRequest({required String endpoint}) : super(endpoint: endpoint);
+  final String entryId;
+
+  DeleteEntryRequest({required this.entryId}) : super(endpoint: "/entries/$entryId");
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    return Map<String, dynamic>();
   }
 }

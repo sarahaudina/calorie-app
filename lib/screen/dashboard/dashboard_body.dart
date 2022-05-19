@@ -8,6 +8,7 @@ import 'package:calorie/screen/shared_components/small_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:calorie/screen/shared_components/base_card.dart';
 import 'package:flutter/material.dart';
+import 'dart:html' as html;
 
 class DashboardBody extends StatefulWidget {
 
@@ -62,19 +63,15 @@ class DashboardBodyState extends State<DashboardBody> {
                   children: [
                     if (selectedIds.isNotEmpty && selectedIds.length==1)
                       DefaultButton("Delete",
-                              (_) {
-                        // show dialog from mobile branch
-                        // delete then reload
-                        EntryAction.of(context).deleteEntry(selectedIds[0].id)
-                            .then((value) => tableKey?.currentState?.refreshSource());
-
-                      }, color: Colors.red),
+                              () => EntryAction.of(context).deleteEntry(selectedIds[0].id)
+                                  .then((value) => html.window.location.reload()),
+                          color: Colors.red),
                     if (selectedIds.isNotEmpty && selectedIds.length==1)
                       DefaultButton("Update",
-                              (_) => createEntryDialog(context),
+                              () => createEntryDialog(context, existingEntry: selectedIds[0]),
                           color: Colors.black),
                     DefaultButton("Create Entry",
-                            (_) => createEntryDialog(context)),
+                            () => createEntryDialog(context)),
                   ],
                 ),
               ),

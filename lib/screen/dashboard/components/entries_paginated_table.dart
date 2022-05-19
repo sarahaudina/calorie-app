@@ -19,14 +19,13 @@ class EntryPaginatedTable extends StatefulWidget {
 }
 
 class EntryPaginatedTableState extends State<EntryPaginatedTable> {
-
   var rowsPerPage = AdvancedPaginatedDataTable.defaultRowsPerPage;
   final DataSource source;
 
   EntryPaginatedTableState(this.source);
 
   Future<void> refreshSource() async {
-    source.requireRemoteReload();
+
   }
 
   @override
@@ -35,6 +34,7 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
       decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16))),
       child: AdvancedPaginatedDataTable(
         source: source,
+        addEmptyRows: false,
         showCheckboxColumn: true,
         showFirstLastButtons: true,
         rowsPerPage: rowsPerPage,
@@ -58,7 +58,6 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
       ),
     );
   }
-
 }
 
 class RowData {

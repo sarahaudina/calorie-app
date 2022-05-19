@@ -1,22 +1,36 @@
 import 'package:calorie/movas/actions/entry_action.dart';
 import 'package:calorie/movas/models/entry.dart';
+import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:calorie/screen/shared_components/material_text_field.dart';
+import 'package:calorie/screen/util.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 
 Future<void> createEntryDialog(
-    BuildContext context ) async {
-
-  print('here');
-
-  final TextEditingController datePickerController = TextEditingController();
+    BuildContext context, {EntryO? existingEntry} ) async {
+  DateTime initialDate = DateTime.now();
+  final TextEditingController datePickerController = TextEditingController()
+    ..text=Util().formatDate(initialDate);
   final TextEditingController foodNameController = TextEditingController();
   final TextEditingController totalCaloriesController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController userIdController = TextEditingController();
 
+  if (existingEntry!=null) {
+    initialDate = existingEntry.createdAt;
+    foodNameController.text = existingEntry.name;
+    totalCaloriesController.text = existingEntry.calories.toString();
+    priceController.text = existingEntry.price?.toString() ?? "";
+    userIdController.text = existingEntry.userId;
+  }
+
+  datePickerController.text=Util().formatDate(initialDate);
+
+
   return showDialog<void>(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    barrierDismissible: true,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text("Add Entry"),
@@ -29,18 +43,23 @@ Future<void> createEntryDialog(
                   label: "User Id",
                   hint: "User Id",
                   controller: userIdController,
+                  disable: existingEntry!=null,
                 ),
                 MaterialTextField(
                   label: "Food Name",
-                  hint: "What did you eat",
+                  hint: "What did you eat?",
                   controller: foodNameController,
                 ),
                 MaterialTextField(
+                  suffix: ' cal',
+                  keyboardType: TextInputType.number,
                   label: "Total Calories",
                   hint: "Total Calories",
                   controller: totalCaloriesController,
                 ),
                 MaterialTextField(
+                  keyboardType: TextInputType.number,
+                  prefix: 'USD ',
                   label: "Price (USD)",
                   hint: "Price",
                   controller: priceController,
@@ -48,10 +67,13 @@ Future<void> createEntryDialog(
                 InkWell(
                   onTap: () => showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
+                      initialDate: initialDate,
                       firstDate: DateTime.now().subtract(Duration(days: 100)),
                       lastDate: DateTime.now().add(Duration(days: 0)))
-                    .then((value) => datePickerController.text = value.toString()),
+                    .then((value) {
+                      if (value!=null)
+                        datePickerController.text = Util().formatDate(value);
+                  }),
                   child: MaterialTextField(
                     label: "Date",
                     hint: "Eat Date",
@@ -65,10 +87,17 @@ Future<void> createEntryDialog(
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('CREATE'),
+            child: Text(existingEntry!=null ? 'UPDATE' : 'CREATE'),
             onPressed: () {
-              // show loading for 2 secs
-              EntryAction.of(context).createEntry(
+              existingEntry!=null ?
+                  EntryAction.of(context).updateEntry(
+                      existingEntry.id,
+                      foodNameController.text,
+                      double.parse(totalCaloriesController.text),
+                      double.parse(priceController.text),
+                      userIdController.text,
+                      DateTime.parse(datePickerController.text))
+              : EntryAction.of(context).createEntry(
                   FoodEntry(
                       foodNameController.text,
                       null,

@@ -11,7 +11,9 @@ class DefaultButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => tap(),
+      onPressed: () {
+        tap();
+      },
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),

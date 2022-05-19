@@ -11,7 +11,6 @@ class DashboardEntryService extends BaseEntryService {
 
   DashboardEntryService(this.allEntriesE, this.httpService);
 
-
   @override
   Future<void> createEntry(CreateEntryRequest request) async {
     try {
@@ -40,9 +39,10 @@ class DashboardEntryService extends BaseEntryService {
   }
 
   @override
-  Future<void> deleteEntry(DeleteEntryRequest request) {
-    // TODO: implement deleteEntry
-    throw UnimplementedError();
+  Future<void> deleteEntry(DeleteEntryRequest request) async {
+    print('deleteEntry $request');
+    var response = await httpService.delete(request: request);
+    return response;
   }
 
   @override
@@ -50,7 +50,7 @@ class DashboardEntryService extends BaseEntryService {
     var response = await httpService.get(
         request: request,
         converter: (_) {
-          print("getEntries $_");
+          // print("getEntries $_");
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {
@@ -65,9 +65,13 @@ class DashboardEntryService extends BaseEntryService {
   }
 
   @override
-  Future<void> updateEntry(UpdateEntryRequest request) {
-    // TODO: implement updateEntry
-    throw UnimplementedError();
+  Future<void> updateEntry(UpdateEntryRequest request) async {
+    var response = await httpService.put(
+        request: request
+    );
+
+    return response;
+
   }
 
   @override

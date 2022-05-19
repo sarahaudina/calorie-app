@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 class MaterialTextField extends StatelessWidget {
   final String? label;
   final String? hint;
+  final String? suffix;
+  final String? prefix;
   final TextEditingController? controller;
   final bool disable;
+  final TextInputType? keyboardType;
 
-  const MaterialTextField({Key? key, this.label, this.hint, this.controller, this.disable=false}) : super(key: key);
+  const MaterialTextField({Key? key, this.label, this.hint, this.controller, this.disable=false, this.suffix, this.prefix, this.keyboardType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,13 @@ class MaterialTextField extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(top: 10),
             child: TextField(
+              keyboardType: keyboardType!=null ? keyboardType : null,
               enabled: !disable,
               controller: controller,
               textAlign: TextAlign.left,
               decoration: InputDecoration(
+                suffix: suffix != null ? Text(suffix!) : null,
+                prefix: prefix != null ? Text(prefix!) : null,
                 labelText: hint ?? "",
                 labelStyle: TextStyle(
                   color: Colors.grey,

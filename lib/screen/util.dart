@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 
 class Util {
   static bool isWeb() {
@@ -7,4 +9,7 @@ class Util {
     }
     return false;
   }
+
+  String formatDate(DateTime date) => DateFormat("MMM dd yyyy").format(date);
+
 }

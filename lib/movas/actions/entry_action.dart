@@ -43,11 +43,18 @@ class EntryAction {
       double price,
       String userId,
       DateTime createdAt) async {
-    return;
+    return service.updateEntry(UpdateEntryRequest(
+        name: name,
+        createdAt: createdAt,
+        price: price,
+        calories: calories,
+        userId: userId,
+        entryId: id
+    ));
   }
 
   Future<void> deleteEntry(String entryId) async {
-    return;
+    return service.deleteEntry(DeleteEntryRequest(entryId: entryId));
   }
 
 }
