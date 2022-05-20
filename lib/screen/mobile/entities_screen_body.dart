@@ -1,8 +1,11 @@
 import 'package:calorie/config/config.dart';
 import 'package:calorie/movas/actions/entry_action.dart';
+import 'package:calorie/movas/models/entry.dart';
 import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:calorie/screen/mobile/components/daily_entry_chart.dart';
+import 'package:calorie/screen/mobile/components/notification_dialog.dart';
 import 'package:calorie/screen/mobile/components/weekly_entry_chart.dart';
+import 'package:calorie/screen/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,17 +37,28 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
     return DateTimeRange(start: DateTime.now(), end: DateTime.now());
   }
 
-  updateDateRange(DateTimeRange newDateTimeRange) {
-    EntryAction.of(context).resetEntries();
-
+  updateDateRange(DateTimeRange newDateTimeRange) async {
     setState(() {
       selectedDateRange = newDateTimeRange;
     });
 
-    EntryAction.of(context).getEntriesForUser(
+    Util.showGetEntriesLoaderDialog(context);
+
+    var entries = await EntryAction.of(context).getEntriesForUser(
         fromDate: selectedDateRange?.start,
         toDate: selectedDateRange?.end
     );
+
+    Navigator.of(context).popUntil((route) => !route.hasActiveRouteBelow);
+
+    if (entries is AllEntries) {
+      if (entries!.passDailyCaloriesLimit!) {
+        showDailyLimitReachedReminder(context);
+      }
+      if (entries!.passMonthlyBudget!){
+        showMonthlyLimitReachedReminder(context);
+      }
+    }
   }
 
   @override
@@ -58,7 +72,7 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
     return Scaffold(
         extendBodyBehindAppBar: false,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(88.0),
+          preferredSize: Size.fromHeight(140.0),
           child: AppBar(
             elevation: 2,
             flexibleSpace: FlexibleSpaceBar(
@@ -73,6 +87,12 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Container(
+                            height: 36,
+                            alignment: Alignment.centerLeft,
+                            width: MediaQuery.of(context).size.width,
+                            child: Text("calorie", style: Theme.of(context).textTheme.titleLarge,)),
+                        Divider(),
                         Container(
                           height: 40,
                           child: Row(
@@ -111,7 +131,7 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
                                       .subtract(Duration(days: 1000)),
                                 ).then((value) {
                                   if (value!=null) {
-                                    updateDateRange(selectedDateRange);
+                                    updateDateRange(value);
                                   }
                                 });
                               }
@@ -162,45 +182,44 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
           padding: const EdgeInsets.all(4),
           child: Consumer<AllEntriesO>(
                       builder: (context, entries, __) {
-                        return Column(
-                          children: [
-                            if (selectedMode=="Weekly")
-                              WeeklyEntryChart(
-                                allEntriesO: entries,
-                                showDay: selectedDateRange?.duration.inDays==6,
-                                startDate: selectedDateRange?.start ?? DateTime.now(),
-                                endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
-                                dailyCalLimit: entries.dailyCaloriesLimit ?? defaultCaloriesLimit,
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              if (selectedMode=="Weekly")
+                                WeeklyEntryChart(
+                                  allEntriesO: entries,
+                                  showDay: selectedDateRange?.duration.inDays==6,
+                                  startDate: selectedDateRange?.start ?? DateTime.now(),
+                                  endDate: selectedDateRange?.end ?? DateTime.now().add(Duration(days: 6)),
+                                  dailyCalLimit: entries.dailyCaloriesLimit ?? defaultCaloriesLimit,
+                                )
+                              else if (selectedMode=="Daily")
+                                DailyEntryChart(
+                                  allEntriesO: entries,
+                                  selectedDate: selectedDateRange?.start ?? DateTime.now(),
+                                  dailyCalLimit: entries.dailyCaloriesLimit ?? defaultCaloriesLimit,
+                                ),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Theme.of(context).backgroundColor,
+                                ),
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Average cal per input : ${entries.allEntries.length==0 ? 0 : entries.allEntries?.last?.user.weeklyAverage} cal"),
+                                    Container(height: 5,),
+                                    Text("Daily remaining calory limit : ${entries.dailyLimitLeft} cal of ${entries.dailyCaloriesLimit} cal"),
+                                    Container(height: 5,),
+                                    Text("Remaining monthly budget : \$${entries.monthlyBudgetLeft} of \$${entries.monthlyBudget}")
+                                  ],
+                                ),
                               )
-                            else if (selectedMode=="Daily")
-                              DailyEntryChart(
-                                allEntriesO: entries,
-                                selectedDate: selectedDateRange?.start ?? DateTime.now(),
-                                dailyCalLimit: entries.dailyCaloriesLimit ?? defaultCaloriesLimit,
-                              ),
-                          if (selectedMode=="Weekly")
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Theme.of(context).backgroundColor,
-                              ),
-                              padding: EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Average input: 123 cal"),
-                                  Container(height: 5,),
-                                  Text("Average daily : 2342 cal"),
-                                  Container(height: 5,),
-                                  Text("Daily remaining calory limit : ${entries.dailyCaloriesLimit} cal of ${entries.dailyCaloriesLimit} cal"),
-                                  Container(height: 5,),
-                                  Text("Remaining monthly budget : \$${entries.monthlyBudget} of \$${entries.monthlyBudget}")
-                                ],
-                              ),
-                            )
-                          ],
+                            ],
+                          ),
                         );
                       }
                   ),

@@ -76,7 +76,7 @@ class DashboardEntryService extends BaseEntryService {
 
   @override
   Future<void> resetEntries() async {
-    return allEntriesE.add(AllEntries([], 0, 0, false, false));
+    return allEntriesE.add(AllEntries([], 0, 0, false, false, 0, 0));
   }
 
   @override

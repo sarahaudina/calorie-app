@@ -3,16 +3,22 @@ class User {
   final String username;
   final String role;
   final DateTime createdAt;
-  final double monthlyBudget;
-  final double dailyCaloryLimit;
+  final double? monthlyBudget;
+  final double? dailyCaloryLimit;
+  final double? weeklyAverage;
 
-  User(this.id, this.username, this.role, this.createdAt, this.monthlyBudget, this.dailyCaloryLimit);
+  User(this.id, this.username, this.role, this.createdAt, this.monthlyBudget, this.dailyCaloryLimit, this.weeklyAverage);
 
   factory User.fromJson(Map json) {
     return User(
-        json['id'],
+        json['_id'],
         json['username'],
-        json['role'], json['createdAt'], json['monthlyBudget'], json['dailyCaloryLimit']);
+        json['role'],
+        DateTime.parse(json['createdAt']).toLocal(),
+        json['monthlyBudget']==null ? null : json['monthlyBudget']*1.0,
+        json['dailyCaloryLimit']==null ? null : json['dailyCaloryLimit']*1.0,
+        json['weeklyAverage']==null ? null : json['weeklyAverage']*1.0,
+    );
   }
 
 }

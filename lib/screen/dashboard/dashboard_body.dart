@@ -62,7 +62,7 @@ class DashboardBodyState extends State<DashboardBody> {
                   children: [
                     if (selectedIds.isNotEmpty && selectedIds.length==1)
                       DefaultButton("Delete",
-                              () => EntryAction.of(context).deleteEntry(selectedIds[0].id)
+                              () => EntryAction.of(context).deleteEntry(selectedIds[0].user.id)
                                   .then((value) {
                                 // html.window.location.reload();
                               }),

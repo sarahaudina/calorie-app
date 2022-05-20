@@ -1,3 +1,4 @@
+import 'package:calorie/main.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showReminderDialog(
@@ -31,9 +32,13 @@ Future<void> showReminderDialog(
 }
 
 Future<void> showDailyLimitReachedReminder(BuildContext context) {
-  return showReminderDialog(context, "Reminder", "You have reached your daily caloty limit.");
+  return showReminderDialog(context, "Reminder", "You have reached your daily calory limit.");
 }
 
 Future<void> showMonthlyLimitReachedReminder(BuildContext context) {
   return showReminderDialog(context, "Reminder", "You have reached your monthly budget limit.");
+}
+
+Future<void> showReminder(String message) async {
+  return showReminderDialog(navigatorKey.currentContext!, "Reminder", message);
 }

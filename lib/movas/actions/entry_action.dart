@@ -1,6 +1,9 @@
+import 'package:calorie/main.dart';
 import 'package:calorie/movas/models/entry.dart';
 import 'package:calorie/movas/services/entry/base_entry_service.dart';
 import 'package:calorie/movas/services/http/model/entry/entry_request.dart';
+import 'package:calorie/screen/mobile/components/notification_dialog.dart';
+import 'package:calorie/screen/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:movas/provider/provider.dart';
 
@@ -17,11 +20,13 @@ class EntryAction {
   }
 
   Future<AllEntries?> getEntries({DateTime? fromDate, DateTime? toDate}) async {
+    resetEntries();
     var result = await service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
     return result;
   }
 
   Future<AllEntries?> getEntriesForUser({DateTime? fromDate, DateTime? toDate}) async {
+    resetEntries();
     var result = await service.getEntriesForUser(GetEntriesForUserRequest(fromDate: fromDate, toDate: toDate));
     return result;
   }
@@ -32,7 +37,7 @@ class EntryAction {
       createdAt: newEntry.createdAt,
       price: newEntry.price,
       calories: newEntry.calories,
-      userId: newEntry.userId
+      userId: newEntry.user!.id
     ));
   }
 

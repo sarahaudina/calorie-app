@@ -57,7 +57,7 @@ class EntriesTable extends StatelessWidget {
       DataCell(Text(entry.createdAt.toString())),
       DataCell(Text(entry.name)),
       DataCell(Text('${entry.calories} cal')),
-      DataCell(Text('${entry.userId}')),
+      DataCell(Text('${entry.user.id}')),
       DataCell(Text('${entry.price}'))
     ]);
   }

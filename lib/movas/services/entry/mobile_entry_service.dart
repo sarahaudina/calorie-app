@@ -6,6 +6,7 @@ import 'package:calorie/movas/services/http/base_http_service.dart';
 import 'package:calorie/movas/services/http/model/entry/entry_request.dart';
 import 'package:calorie/movas/services/http/model/entry/entry_response.dart';
 import 'package:calorie/screen/mobile/components/notification_dialog.dart';
+import 'package:calorie/screen/util.dart';
 import 'package:movas/movas.dart';
 
 class EntryService extends BaseEntryService {
@@ -16,29 +17,8 @@ class EntryService extends BaseEntryService {
 
   @override
   Future<void> createEntry(CreateEntryRequest request) async {
-    try {
-      print('createEntry ${request.toMap().toString()}');
-      var response = await httpService.post(
-          request: request,
-          converter: (_) {
-            print("createEntry $_");
-            return _;
-          });
-
-      if (response['statusCode'] == 200) {
-        // show dialog success
-
-      } else {
-        // show dialog failed
-
-      }
-    } catch (_) {
-      // show dialog failed
-      print("createEntry $_");
-
-    }
-
-    return;
+    return httpService.post(
+        request: request);
   }
 
   @override
@@ -46,20 +26,11 @@ class EntryService extends BaseEntryService {
     var response = await httpService.get(
         request: request,
         converter: (_) {
-          print("getEntries $_");
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {
       var allEntries = AllEntries.fromResponse(response);
       allEntriesE.add(allEntries);
-
-      if (allEntries.passDailyCaloriesLimit ?? false) {
-        showDailyLimitReachedReminder(navigatorKey.currentContext!);
-      }
-      if (allEntries.passMonthlyBudget ?? false){
-        showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
-      }
-
       return allEntries;
     }
   }
@@ -69,27 +40,18 @@ class EntryService extends BaseEntryService {
     var response = await httpService.get(
         request: request,
         converter: (_) {
-          // print("getEntries $_");
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {
       var allEntries = AllEntries.fromResponse(response);
       allEntriesE.add(allEntries);
-
-      if (allEntries.passDailyCaloriesLimit ?? false) {
-        showDailyLimitReachedReminder(navigatorKey.currentContext!);
-      }
-      if (allEntries.passMonthlyBudget ?? false){
-        showMonthlyLimitReachedReminder(navigatorKey.currentContext!);
-      }
-
       return null;
     }
   }
 
   @override
   Future<void> resetEntries() async {
-    return allEntriesE.add(AllEntries([], 0, 0, false, false));
+    return allEntriesE.add(AllEntries([], 0, 0, false, false, 0 , 0));
   }
 
   @override

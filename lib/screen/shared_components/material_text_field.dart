@@ -9,8 +9,9 @@ class MaterialTextField extends StatelessWidget {
   final TextEditingController? controller;
   final bool disable;
   final TextInputType? keyboardType;
+  final String Function(String?)? validator;
 
-  const MaterialTextField({Key? key, this.label, this.hint, this.controller, this.disable=false, this.suffix, this.prefix, this.keyboardType}) : super(key: key);
+  const MaterialTextField({Key? key, this.validator, this.label, this.hint, this.controller, this.disable=false, this.suffix, this.prefix, this.keyboardType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,8 @@ class MaterialTextField extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: TextField(
+            child: TextFormField(
+              validator: (_) => validator?.call(_),
               keyboardType: keyboardType!=null ? keyboardType : null,
               enabled: !disable,
               controller: controller,

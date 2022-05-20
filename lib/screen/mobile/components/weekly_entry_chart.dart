@@ -79,7 +79,7 @@ class WeeklyEntryChartState extends State<WeeklyEntryChart> {
                   height: 38,
                 ),
                 Expanded(
-                  child: BarChart(
+                  child: showingBarGroups.isEmpty ? Container() : BarChart(
                     BarChartData(
                       maxY: maxY ?? widget.dailyCalLimit,
                       barTouchData: BarTouchData(
@@ -137,28 +137,23 @@ class WeeklyEntryChartState extends State<WeeklyEntryChart> {
 
 
   Widget leftTitles(double value, TitleMeta meta) {
-    // return Container();
     var style = TextStyle(
       color: Theme.of(context).primaryColorDark,
       fontWeight: FontWeight.w800,
       fontSize: 10,
     );
-    String text = "";
     if (maxY == double.nan || value == double.nan) {
       return Container();
     } else if (value == 0) {
-      text = '0 cal';
+      return Container();
+      // return Text('0 cal', style: style);
     } else if (value == maxY) {
-      text = '${value.toInt()}';
+      return Text('${value.toInt()} cal', style: style);
     } else if (value == widget.dailyCalLimit) {
-      text = '${value.toInt()}\n(daily limit)';
+      return Text('${value.toInt()} cal\n(daily limit)', style: style);
     } else {
       return Container();
     }
-
-    return Container(
-        width: 16,
-        child: Text(text, style: style));
   }
 
   Widget bottomTitles(double value, TitleMeta meta) {

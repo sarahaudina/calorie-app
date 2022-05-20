@@ -84,15 +84,15 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
     final currentRowData = lastDetails!.rows[index];
     return DataRow(
         onSelectChanged: (selected) {
-          if (selectedIds.contains(currentRowData.id)) {
-            selectedIds.remove(currentRowData.id);
+          if (selectedIds.contains(currentRowData.user.id)) {
+            selectedIds.remove(currentRowData.user.id);
           } else {
-            selectedIds.add(currentRowData.id);
+            selectedIds.add(currentRowData.user.id);
           }
-          selectedCallBack?.call(currentRowData, selectedIds.contains(currentRowData.id));
+          selectedCallBack?.call(currentRowData, selectedIds.contains(currentRowData.user.id));
           notifyListeners();
         },
-        selected: selectedIds.contains(data[index].id),
+        selected: selectedIds.contains(data[index].user.id),
         cells: [
       DataCell(
         Text(currentRowData.name.toString()),
@@ -104,7 +104,7 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
         Text(currentRowData.price.toString()),
       ),
       DataCell(
-        Text(currentRowData.userId),
+        Text(currentRowData.user.id),
       ),
       DataCell(
         Text("25-05-2022")

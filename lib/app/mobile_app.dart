@@ -24,24 +24,6 @@ class MobileApp extends StatelessWidget {
             primaryColorDark: Colors.black,
             primaryColorLight: Colors.white,
             textSelectionColor: Colors.black,
-            textTheme: TextTheme(
-              titleSmall: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12
-              ),
-              labelLarge: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 32
-              ),
-              labelMedium: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18
-              ),
-              labelSmall: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12
-              ),
-            )
         ),
         home: EntitiesScreen(),
       ),

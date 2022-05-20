@@ -1,5 +1,7 @@
+import 'package:calorie/config/mobile_config.dart';
 import 'package:calorie/movas/actions/entry_action.dart';
 import 'package:calorie/movas/models/entry.dart';
+import 'package:calorie/movas/models/user.dart';
 import 'package:calorie/movas/observables/entry_o.dart';
 import 'package:calorie/screen/shared_components/material_text_field.dart';
 import 'package:calorie/screen/util.dart';
@@ -8,7 +10,7 @@ import 'package:intl/intl.dart';
 
 
 Future<void> createEntryDialog(
-    BuildContext context, {EntryO? existingEntry} ) async {
+    BuildContext context, {EntryO? existingEntry, bool isAdmin=true} ) async {
   final TextEditingController datePickerController = TextEditingController();
   final TextEditingController foodNameController = TextEditingController();
   final TextEditingController totalCaloriesController = TextEditingController();
@@ -21,7 +23,7 @@ Future<void> createEntryDialog(
     foodNameController.text = existingEntry.name;
     totalCaloriesController.text = existingEntry.calories.toString();
     priceController.text = existingEntry.price?.toString() ?? "";
-    userIdController.text = existingEntry.userId;
+    userIdController.text = existingEntry.user.id;
   }
 
   datePickerController.text=Util.formatDate(initialDate);
@@ -38,6 +40,7 @@ Future<void> createEntryDialog(
           child: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
+                if (isAdmin)
                 MaterialTextField(
                   label: "User Id",
                   hint: "User Id",
@@ -88,6 +91,13 @@ Future<void> createEntryDialog(
           TextButton(
             child: Text(existingEntry!=null ? 'UPDATE' : 'CREATE'),
             onPressed: () {
+              if (isAdmin && userIdController.text.isEmpty
+                || foodNameController.text.isEmpty
+                  || totalCaloriesController.text.isEmpty
+              ) {
+                  return showSnackbar(context, "Some field can't be empty");
+              }
+
               existingEntry!=null ?
                   EntryAction.of(context).updateEntry(
                       existingEntry.id,
@@ -98,12 +108,21 @@ Future<void> createEntryDialog(
                       Util.parseDate(datePickerController.text))
               : EntryAction.of(context).createEntry(
                   FoodEntry(
+                      "",
                       foodNameController.text,
-                      null,
+                      User(
+                          user_id,
+                          "",
+                          "",
+                          DateTime.now(),
+                          null,
+                          null,
+                          null
+                      ),
                       double.parse(totalCaloriesController.text),
                       priceController.text=="" ? null : double.parse(priceController.text),
-                      userIdController.text,
                       Util.parseDate(datePickerController.text)));
+
               Navigator.pop(context, true);
             },
           ),
@@ -112,3 +131,35 @@ Future<void> createEntryDialog(
     },
   );
 }
+
+showSnackbar(BuildContext context, String text) {
+  final snackBar = SnackBar(
+    backgroundColor: Colors.red,
+    content:  Text(text),
+    action: SnackBarAction(
+      label: 'OK',
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    ),
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
+String validateNumber(String? value) {
+  if (value==null)
+    return "Value Can\'t Be Empty";
+
+  else if (Util.isNumeric(value)) {
+    if (double.parse(value)<=0)
+      return "Value Can\'t Be Empty";
+    else
+      return "";
+  }
+
+  else if (!Util.isNumeric(value))
+    return "Value must be a number";
+
+  return "";
+}
+
