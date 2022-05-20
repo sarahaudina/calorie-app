@@ -137,3 +137,13 @@ class DeleteEntryRequest extends BaseHttpRequest {
     return Map<String, dynamic>();
   }
 }
+
+class GetMetaDataRequest extends BaseHttpRequest {
+
+  GetMetaDataRequest() : super(endpoint: "/entries/metadata");
+
+  @override
+  Map<String, dynamic> toMap() {
+    return Map<String, dynamic>();
+  }
+}

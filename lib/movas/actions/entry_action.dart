@@ -25,6 +25,11 @@ class EntryAction {
     return result;
   }
 
+  Future<EntryMetaData?> getMetadata() async {
+    var result = await service.getMetaData(GetMetaDataRequest());
+    return result;
+  }
+
   Future<AllEntries?> getEntriesForUser({DateTime? fromDate, DateTime? toDate}) async {
     resetEntries();
     var result = await service.getEntriesForUser(GetEntriesForUserRequest(fromDate: fromDate, toDate: toDate));

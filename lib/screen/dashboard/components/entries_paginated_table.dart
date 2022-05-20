@@ -4,6 +4,7 @@ import 'package:calorie/main.dart';
 import 'package:calorie/movas/actions/entry_action.dart';
 import 'package:calorie/movas/models/entry.dart';
 import 'package:calorie/movas/observables/entry_o.dart';
+import 'package:calorie/screen/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +55,9 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
           DataColumn(
             label: Text("Created At"),
           ),
+          DataColumn(
+            label: Text("User Weekly\nAverage (cal)"),
+          ),
         ],
       ),
     );
@@ -84,15 +88,15 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
     final currentRowData = lastDetails!.rows[index];
     return DataRow(
         onSelectChanged: (selected) {
-          if (selectedIds.contains(currentRowData.user.id)) {
-            selectedIds.remove(currentRowData.user.id);
+          if (selectedIds.contains(currentRowData.id)) {
+            selectedIds.remove(currentRowData.id);
           } else {
-            selectedIds.add(currentRowData.user.id);
+            selectedIds.add(currentRowData.id);
           }
-          selectedCallBack?.call(currentRowData, selectedIds.contains(currentRowData.user.id));
+          selectedCallBack?.call(currentRowData, selectedIds.contains(currentRowData.id));
           notifyListeners();
         },
-        selected: selectedIds.contains(data[index].user.id),
+        selected: selectedIds.contains(data[index].id),
         cells: [
       DataCell(
         Text(currentRowData.name.toString()),
@@ -107,9 +111,11 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
         Text(currentRowData.user.id),
       ),
       DataCell(
-        Text("25-05-2022")
-        // Text(currentRowData.createdAt),
-      )
+        Text(Util.formatDate(currentRowData.createdAt))
+      ),
+      DataCell(
+        Text(currentRowData.user.weeklyAverage!.floor().toString()),
+      ),
     ]);
   }
 
@@ -127,6 +133,14 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
       NextPageRequest pageRequest) async {
 
     var response = await EntryAction.of(navigatorKey.currentContext!).getEntries();
+
+    // if (response is AllEntries) {
+    //   for (var i=0; i<=response.allEntries.length; i++) {
+    //     // if (i >= pageRequest.offset)
+    //     data.add(EntryO.fromEntity(response.allEntries[i]));
+    //   }
+    // }
+
     if (response is AllEntries) {
       for (var i in response.allEntries) {
         data.add(EntryO.fromEntity(i));

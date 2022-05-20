@@ -66,4 +66,10 @@ class EntryService extends BaseEntryService {
     throw UnimplementedError();
   }
 
+  @override
+  Future<EntryMetaData?> getMetaData(GetMetaDataRequest request) {
+    // TODO: implement getMetaData
+    throw UnimplementedError();
+  }
+
 }

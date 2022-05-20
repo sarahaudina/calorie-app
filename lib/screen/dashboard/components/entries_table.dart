@@ -38,6 +38,9 @@ class EntriesTable extends StatelessWidget {
                   DataColumn(
                     label: Text("Price"),
                   ),
+                  DataColumn(
+                    label: Text("User Weekly\nAverage"),
+                  ),
                 ],
                 rows: List.generate(
                   entries.allEntries.length,
@@ -58,7 +61,9 @@ class EntriesTable extends StatelessWidget {
       DataCell(Text(entry.name)),
       DataCell(Text('${entry.calories} cal')),
       DataCell(Text('${entry.user.id}')),
-      DataCell(Text('${entry.price}'))
+      DataCell(Text('${entry.price}')),
+      DataCell(Text('${entry.user.weeklyAverage}'))
+
     ]);
   }
 }

@@ -51,3 +51,15 @@ class AllEntries {
 
   AllEntries(this.allEntries, this.monthlyBudget, this.dailyCaloriesLimit, this.passMonthlyBudget, this.passDailyCaloriesLimit, this.monthlyBudgetLeft, this.dailyLimitLeft);
 }
+
+class EntryMetaData {
+  final int countPrevWeek;
+  final int countThisWeek;
+
+  EntryMetaData(this.countPrevWeek, this.countThisWeek);
+
+  factory EntryMetaData.fromJson(Map json) {
+     return EntryMetaData(json["countPrevWeek"], json["countThisWeek"]);
+  }
+
+}

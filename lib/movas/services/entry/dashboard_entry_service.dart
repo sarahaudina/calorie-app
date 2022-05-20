@@ -3,6 +3,7 @@ import 'package:calorie/movas/services/entry/base_entry_service.dart';
 import 'package:calorie/movas/services/http/base_http_service.dart';
 import 'package:calorie/movas/services/http/model/entry/entry_request.dart';
 import 'package:calorie/movas/services/http/model/entry/entry_response.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:movas/movas.dart';
 
 class DashboardEntryService extends BaseEntryService {
@@ -83,6 +84,18 @@ class DashboardEntryService extends BaseEntryService {
   Future<AllEntries?> getEntriesForUser(GetEntriesForUserRequest request) {
     // TODO: implement getEntriesForUser
     throw UnimplementedError();
+  }
+
+  @override
+  Future<EntryMetaData?> getMetaData(GetMetaDataRequest request) async {
+    var response = await httpService.get(
+        request: request, converter: (_) => EntryMetaData.fromJson(_));
+
+    if (response is MetaData) {
+      return response;
+    }
+
+    return null;
   }
 
 

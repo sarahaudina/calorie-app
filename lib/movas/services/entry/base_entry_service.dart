@@ -14,4 +14,7 @@ abstract class BaseEntryService {
   Future<void> updateEntry(UpdateEntryRequest request);
 
   Future<AllEntries?> getEntriesForUser(GetEntriesForUserRequest request);
+
+  Future<EntryMetaData?> getMetaData(GetMetaDataRequest request);
+
 }
