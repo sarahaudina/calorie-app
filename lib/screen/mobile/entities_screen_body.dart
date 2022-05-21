@@ -29,12 +29,15 @@ class EntitiesScreenBodyState extends State<EntitiesScreenBody> {
   final DateFormat dateFormat = DateFormat("dd MMM yy");
 
   DateTimeRange getDefaultDateRange() {
-    var monThisWeek = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+    DateTime now = DateTime.now();
+    var monThisWeek = now.subtract(Duration(days: now.weekday - 1, hours: now.hour, minutes: now.minute, seconds: now.second, milliseconds: now.millisecond, microseconds: now.microsecond ));
     return DateTimeRange(start: monThisWeek, end: monThisWeek.add(Duration(days: 6)));
   }
 
   DateTimeRange dateRangeForToday() {
-    return DateTimeRange(start: DateTime.now(), end: DateTime.now());
+    DateTime now = DateTime.now();
+    DateTime startOfToday = now.subtract(Duration(hours: now.hour, minutes: now.minute, seconds: now.second, milliseconds: now.millisecond, microseconds: now.microsecond));
+    return DateTimeRange(start: startOfToday, end: startOfToday.add(Duration(hours: 24)));
   }
 
   updateDateRange(DateTimeRange newDateTimeRange) async {

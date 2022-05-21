@@ -16,17 +16,17 @@ Future<void> createEntryDialog(
   final TextEditingController totalCaloriesController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController userIdController = TextEditingController();
-  DateTime initialDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
 
   if (existingEntry!=null) {
-    initialDate = existingEntry.createdAt;
+    selectedDate = existingEntry.createdAt;
     foodNameController.text = existingEntry.name;
     totalCaloriesController.text = existingEntry.calories.toString();
     priceController.text = existingEntry.price?.toString() ?? "";
     userIdController.text = existingEntry.user.id;
   }
 
-  datePickerController.text=Util.formatDate(initialDate);
+  datePickerController.text=Util.formatDate(selectedDate);
 
 
   return showDialog<void>(
@@ -69,12 +69,14 @@ Future<void> createEntryDialog(
                 InkWell(
                   onTap: () => showDatePicker(
                       context: context,
-                      initialDate: initialDate,
+                      initialDate: selectedDate,
                       firstDate: DateTime.now().subtract(Duration(days: 100)),
                       lastDate: DateTime.now().add(Duration(days: 0)))
                     .then((value) {
-                      if (value!=null)
+                      if (value!=null) {
+                        selectedDate = value;
                         datePickerController.text = Util.formatDate(value);
+                      }
                   }),
                   child: MaterialTextField(
                     label: "Date",
@@ -121,7 +123,7 @@ Future<void> createEntryDialog(
                       ),
                       double.parse(totalCaloriesController.text),
                       priceController.text=="" ? null : double.parse(priceController.text),
-                      Util.parseDate(datePickerController.text)));
+                      selectedDate));
 
               Navigator.pop(context, true);
             },

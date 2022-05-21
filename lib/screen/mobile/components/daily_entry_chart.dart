@@ -99,9 +99,9 @@ class DailyEntryChartState extends State<DailyEntryChart>{
   }
 
   double getTotalConsumed() {
-    if (totalConsumed<=widget.dailyCalLimit)
-      return totalConsumed/getTotal()*100;
-    return (totalConsumed-widget.dailyCalLimit)/getTotal()*100;
+    if (totalConsumed>widget.dailyCalLimit)
+      return 0;
+    return totalConsumed/getTotal()*100;
   }
 
   double getExcessPercentage() {
@@ -130,14 +130,14 @@ class DailyEntryChartState extends State<DailyEntryChart>{
           return PieChartSectionData(
             color: const Color(0xff0293ee),
             value: getTotalConsumed(),
-            title: totalConsumed==null ? "" : '${getTotalConsumed().toInt()}%',
+            title: '${getTotalConsumed().toInt()}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
-            badgeWidget: _Badge(
-              label: 'Consumed',
+            badgeWidget: getTotalConsumed()>100?null:_Badge(
+              label: 'Consumed ${getTotalConsumed().toStringAsFixed(2)}%',
               size: widgetSize,
               borderColor: const Color(0xff0293ee),
             ),
@@ -147,14 +147,14 @@ class DailyEntryChartState extends State<DailyEntryChart>{
           return PieChartSectionData(
             color: const Color(0xfff8b250),
             value: getExcessPercentage(),
-            title: getExcessPercentage()<=0 ? '' : '${getExcessPercentage().toInt()}%',
+            title: '${getExcessPercentage().toStringAsFixed(2)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
             badgeWidget: _Badge(
-              label: "Excess",
+              label: "Excess ${getExcessPercentage().toStringAsFixed(2)}%",
               size: widgetSize,
               borderColor: const Color(0xfff8b250),
             ),
@@ -164,14 +164,14 @@ class DailyEntryChartState extends State<DailyEntryChart>{
           return PieChartSectionData(
             color: const Color(0xff845bef),
             value: getRemainingLimitPercentage(),
-            title: getRemainingLimitPercentage()<=0 ? '' : '${getRemainingLimitPercentage().toInt()}%',
+            title:  '${getRemainingLimitPercentage().toStringAsFixed(2)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xffffffff)),
             badgeWidget: _Badge(
-              label: "Remaining",
+              label: "Remaining ${getRemainingLimitPercentage()}%",
               size: widgetSize,
               borderColor: const Color(0xff845bef),
             ),

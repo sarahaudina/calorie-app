@@ -13,8 +13,7 @@ class FoodEntry {
   FoodEntry(this.id, this.name, this.user, this.calories, this.price, this.createdAt);
 
   factory FoodEntry.fromJson(Map json) {
-    print('here is ${DateTime.now()}');
-    print('date is ${DateTime.parse(json['createdAt']).toLocal()}');
+    print('${json['calories']} date is ${DateTime.parse(json['createdAt']).toLocal()}');
 
     return FoodEntry(
         json['_id'],

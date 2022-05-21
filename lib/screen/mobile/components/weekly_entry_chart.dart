@@ -190,8 +190,14 @@ class WeeklyEntryChartState extends State<WeeklyEntryChart> {
     var showingBarGroups = List.generate(
         widget.endDate.difference(widget.startDate).inDays+1, (index) => makeGroupData(index, 0));
 
+    var dates = List.generate(widget.endDate.difference(widget.startDate).inDays+1,
+            (index) {
+            print('date-$index is ${widget.startDate.add(Duration(days: index))}');
+            return widget.startDate.add(Duration(days: index));
+          });
+
     for (var i in widget.allEntriesO.allEntries) {
-      int index = i.createdAt.difference(widget.startDate).inDays.abs();
+      int index = dates.indexWhere((element) => element.difference(i.createdAt).inDays==0);
       double agrCalories = i.calories + showingBarGroups[index].barRods[0].toY;
       showingBarGroups.removeAt(index);
       showingBarGroups.insert(index, makeGroupData(index, agrCalories));
