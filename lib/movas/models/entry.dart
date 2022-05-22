@@ -13,7 +13,7 @@ class FoodEntry {
   FoodEntry(this.id, this.name, this.user, this.calories, this.price, this.createdAt);
 
   factory FoodEntry.fromJson(Map json) {
-    print('${json['calories']} date is ${DateTime.parse(json['createdAt']).toLocal()}');
+    // print('${json['calories']} date is ${DateTime.parse(json['createdAt']).toLocal()}');
 
     return FoodEntry(
         json['_id'],
@@ -34,6 +34,7 @@ class AllEntries {
   final bool? passDailyCaloriesLimit;
   final double? monthlyBudgetLeft;
   final double? dailyLimitLeft;
+  final int? totalCount;
 
   factory AllEntries.fromResponse(GetEntriesResponse response) {
     var entries = List<FoodEntry>.from(response.map.map((model)=> FoodEntry.fromJson(model)));
@@ -44,21 +45,29 @@ class AllEntries {
         response.passMonthlyBudget ?? false,
         response.passDailyCaloriesLimit ?? false,
         response.monthlyBudgetLeft,
-        response.dailyLimitLeft
+        response.dailyLimitLeft,
+        response.totalItems
     );
   }
 
-  AllEntries(this.allEntries, this.monthlyBudget, this.dailyCaloriesLimit, this.passMonthlyBudget, this.passDailyCaloriesLimit, this.monthlyBudgetLeft, this.dailyLimitLeft);
+  AllEntries(this.allEntries, this.monthlyBudget, this.dailyCaloriesLimit, this.passMonthlyBudget, this.passDailyCaloriesLimit, this.monthlyBudgetLeft, this.dailyLimitLeft, this.totalCount);
 }
 
 class EntryMetaData {
   final int countPrevWeek;
   final int countThisWeek;
+  final int totalItems;
+  final double averageLastWeekInput;
+  final int lastWeekActiveUsers;
 
-  EntryMetaData(this.countPrevWeek, this.countThisWeek);
+  EntryMetaData(this.countPrevWeek, this.countThisWeek, this.totalItems, this.averageLastWeekInput, this.lastWeekActiveUsers);
 
   factory EntryMetaData.fromJson(Map json) {
-     return EntryMetaData(json["countPrevWeek"], json["countThisWeek"]);
+     return EntryMetaData(
+         json["countPrevWeek"],
+         json["countLastWeek"],
+         json["totalItems"],
+         json["averageLastWeekInput"],
+         json["lastWeekActiveUsers"]);
   }
-
 }

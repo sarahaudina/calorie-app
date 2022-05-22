@@ -9,6 +9,7 @@ import 'package:calorie/screen/shared_components/small_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:calorie/screen/shared_components/base_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashboardBody extends StatefulWidget {
   @override
@@ -20,7 +21,6 @@ class DashboardBody extends StatefulWidget {
 class DashboardBodyState extends State<DashboardBody> {
   List<EntryO> selectedIds = [];
   final GlobalKey<EntryPaginatedTableState> tableKey = GlobalKey();
-  late EntryMetaData metaData;
 
   @override
   void initState() {
@@ -31,11 +31,7 @@ class DashboardBodyState extends State<DashboardBody> {
   }
 
   initMetaData() async {
-    var res = await EntryAction.of(context).getMetadata();
-    setState(() {
-      if (res!=null)
-      metaData = res;
-    });
+    EntryAction.of(context).getMetadata();
   }
 
   @override
@@ -49,20 +45,53 @@ class DashboardBodyState extends State<DashboardBody> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: metaData==null ? CircularProgressIndicator() : SmallCard(
-                          title: "New Entries",
-                        value: metaData.countThisWeek.toString(), label: "cal",
-                        comparedValue: "Last week ${metaData.countPrevWeek}",),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: SmallCard(title: "Weekly Average", value: "1500", label: "cal"),
-                    ),
-                  ],
+                Consumer<EntryMetaDataO?>(
+                    builder: (context, metaData, _) {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: metaData==null ? CircularProgressIndicator() : SmallCard(
+                              title: "New Entries",
+                              value: metaData.countLastWeek.toString(), label: "entries",
+                              comparedValue:
+                              metaData.countLastWeek>=metaData.countPrevWeek
+                                  ? "+${metaData.countLastWeek-metaData.countPrevWeek} from previous week"
+                                  : "-${metaData.countLastWeek-metaData.countPrevWeek} from previous week",
+                              compareValueColor: metaData.countLastWeek>metaData.countPrevWeek
+                                ? Colors.green
+                                  : metaData.countLastWeek<metaData.countPrevWeek
+                                  ? Colors.red
+                                  : Colors.black
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: metaData==null ? CircularProgressIndicator() : SmallCard(
+                              title: "Total Entries",
+                              value: metaData.totalItems.toString(), label: "entries"),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: metaData==null ? CircularProgressIndicator() : SmallCard(
+                              title: "Last Week Average Value",
+                              value: metaData.averageLastWeekInput.toStringAsFixed(2), label: "cal per entry"),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: metaData==null ? CircularProgressIndicator() : SmallCard(
+                              title: "Last Week Active Users",
+                              value: metaData.lastWeekActiveUsers.toString(), label: "users",
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),

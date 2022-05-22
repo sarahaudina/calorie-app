@@ -12,3 +12,14 @@ class AllEntriesStore extends Store<AllEntriesO> {
     });
   }
 }
+
+
+class EntriesMetadataStore extends Store<EntryMetaDataO> {
+  EntriesMetadataStore(PublishSubject<EntryMetaData> meta) {
+    add(EntryMetaDataO(0, 0, 0, 0, 0));
+
+    listen(meta, (p0) async {
+      add(EntryMetaDataO.fromEntity(p0 as EntryMetaData));
+    });
+  }
+}

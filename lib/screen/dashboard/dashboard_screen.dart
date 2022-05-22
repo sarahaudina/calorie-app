@@ -14,8 +14,8 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp)
-      => EntryAction.of(context).getEntries());
+    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp)
+    //   => EntryAction.of(context).getEntries());
   }
 
   @override

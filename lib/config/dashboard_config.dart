@@ -14,7 +14,7 @@ class AdminTheme {
 class DashboardConfig extends Config {
   @override
   String accessToken() {
-    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI4MGVmYzUzMjU0ZmEyNDU2ZGE2ZWE4In0sImlzQWRtaW4iOnRydWUsImlhdCI6MTY1MjY3NTE3MSwiZXhwIjoxNjUzMDM1MTcxfQ.YvCYw-lGdtxhqHKFa-O2GmWdDg-b3AfOlzeKfFCtFh4";
+    return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjI4OGVmNjVmODI0ZDMzMDMyMzFhZjdhIiwiZGFpbHlDYWxvcnlMaW1pdCI6MjEwMCwibW9udGhseUJ1ZGdldCI6MTAwMH0sImlzQWRtaW4iOnRydWUsImlhdCI6MTY1MzE0MTM2MiwiZXhwIjoxNjUzNTAxMzYyfQ.rjC3T6FKWUNkWQLVXygyfDshWE_39tYtnKPA229n1a8";
   }
 
   @override

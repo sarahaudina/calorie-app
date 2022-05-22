@@ -13,7 +13,7 @@ class DrawerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => onTap,
-      leading: Image.asset(icon),
+      leading: Icon(Icons.chevron_right, size: 16, color: Colors.white,),
       title: Text(title, style: TextStyle(color: Theme.of(context).primaryColorLight),),
       selectedColor: Theme.of(context).focusColor,
     );
@@ -37,17 +37,21 @@ class MenuDrawerState extends State<MenuDrawer> {
       elevation: 75,
       child: ListView(
         children: [
-          DrawerHeader(child: Image.asset("icons/Icon-192.png")),
-          DrawerTile(
-            title: "Users",
-            icon: 'icons/Icon-192.png',
-            onTap: (){
-              setState(() {
-                showUsers = true;
-              });
-            },
-            selected: showUsers,
-          ),
+          DrawerHeader(child: Column(
+            children: [
+              Icon(Icons.home, size: 60,),
+              Padding(
+                padding: const EdgeInsets.only(top:8.0),
+                child: Text("Calorie Dashboard",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                      // color: Colors.white
+                  )
+                ),
+              ),
+            ],
+          )),
           DrawerTile(
             title: "Food Entries",
             icon: 'icons/Icon-192.png',

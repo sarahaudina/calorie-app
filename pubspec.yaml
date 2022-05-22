@@ -50,7 +50,6 @@ dev_dependencies:
   # charts & graphs deps :
   fl_chart: ^0.50.6
   data_table_2: ^2.0.3
-  advanced_datatable: ^0.0.7
   # networks deps :
   dio: ^4.0.4
   dio_http_cache: ^0.3.0

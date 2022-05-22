@@ -8,9 +8,11 @@ import 'package:movas/movas.dart';
 
 class DashboardEntryService extends BaseEntryService {
   final PublishSubject<AllEntries> allEntriesE;
+  final PublishSubject<EntryMetaData> entryMeta$;
+
   final BaseHttpService httpService;
 
-  DashboardEntryService(this.allEntriesE, this.httpService);
+  DashboardEntryService(this.allEntriesE, this.httpService, this.entryMeta$);
 
   @override
   Future<void> createEntry(CreateEntryRequest request) async {
@@ -77,7 +79,7 @@ class DashboardEntryService extends BaseEntryService {
 
   @override
   Future<void> resetEntries() async {
-    return allEntriesE.add(AllEntries([], 0, 0, false, false, 0, 0));
+    return allEntriesE.add(AllEntries([], 0, 0, false, false, 0, 0, 0));
   }
 
   @override
@@ -91,7 +93,8 @@ class DashboardEntryService extends BaseEntryService {
     var response = await httpService.get(
         request: request, converter: (_) => EntryMetaData.fromJson(_));
 
-    if (response is MetaData) {
+    if (response is EntryMetaData) {
+      entryMeta$.add(response);
       return response;
     }
 

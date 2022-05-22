@@ -19,9 +19,9 @@ class EntryAction {
     return service.resetEntries();
   }
 
-  Future<AllEntries?> getEntries({DateTime? fromDate, DateTime? toDate}) async {
+  Future<AllEntries?> getEntries({DateTime? fromDate, DateTime? toDate, int? page}) async {
     resetEntries();
-    var result = await service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate));
+    var result = await service.getEntries(GetEntriesRequest(fromDate: fromDate, toDate: toDate, page: page));
     return result;
   }
 

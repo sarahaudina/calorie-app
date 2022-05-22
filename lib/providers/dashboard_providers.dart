@@ -23,12 +23,19 @@ List<SingleChildWidget> streamDashboardProviders = [
   Provider<PublishSubject<AllEntries>>(
       lazy: false,
       create: (context) => PublishSubject<AllEntries>(sync: true),
+      dispose: (_, stream) => stream.close()),
+  Provider<PublishSubject<EntryMetaData>>(
+      lazy: false,
+      create: (context) => PublishSubject<EntryMetaData>(sync: true),
       dispose: (_, stream) => stream.close())
 ];
 
 List<SingleChildWidget> storeDashboardProviders = [
   StoreProvider<AllEntriesStore, AllEntriesO>(
     storeBuilder: (context) => AllEntriesStore(StaticProvider.of(context)),
+  ),
+  StoreProvider<EntriesMetadataStore, EntryMetaDataO>(
+    storeBuilder: (context) => EntriesMetadataStore(StaticProvider.of(context)),
   ),
 ];
 
@@ -39,6 +46,6 @@ List<SingleChildWidget> serviceDashboardProviders = [
   ),
   Provider<BaseEntryService>(
     lazy: false,
-    create: (context) => DashboardEntryService(StaticProvider.of(context), StaticProvider.of(context)),
+    create: (context) => DashboardEntryService(StaticProvider.of(context), StaticProvider.of(context), StaticProvider.of(context)),
   )
 ];

@@ -35,11 +35,12 @@ class GetEntriesForUserRequest extends BaseHttpRequest {
 class GetEntriesRequest extends BaseHttpRequest {
   final DateTime? fromDate;
   final DateTime? toDate;
+  final int? page;
 
-  GetEntriesRequest({this.fromDate, this.toDate})
+  GetEntriesRequest({this.fromDate, this.toDate, this.page=1})
       : super(
             endpoint: "/entries"
-                "${addQueries(fromDate: fromDate, toDate: toDate)}",
+                "?page=$page",
             useToken: true,
             contentType: Headers.jsonContentType
   );

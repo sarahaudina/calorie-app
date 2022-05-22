@@ -38,7 +38,3 @@ Future<void> showDailyLimitReachedReminder(BuildContext context) {
 Future<void> showMonthlyLimitReachedReminder(BuildContext context) {
   return showReminderDialog(context, "Reminder", "You have reached your monthly budget limit.");
 }
-
-Future<void> showReminder(String message) async {
-  return showReminderDialog(navigatorKey.currentContext!, "Reminder", message);
-}

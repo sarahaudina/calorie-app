@@ -45,3 +45,25 @@ class AllEntriesO {
     );
   }
 }
+
+
+class EntryMetaDataO {
+  final int countPrevWeek;
+  final int countLastWeek;
+  final int totalItems;
+  final double averageLastWeekInput;
+  final int lastWeekActiveUsers;
+
+  EntryMetaDataO(this.countPrevWeek, this.countLastWeek, this.totalItems, this.averageLastWeekInput, this.lastWeekActiveUsers);
+
+  factory EntryMetaDataO.fromEntity(EntryMetaData entity) {
+    return EntryMetaDataO(
+        entity.countPrevWeek,
+        entity.countThisWeek,
+        entity.totalItems,
+        entity.averageLastWeekInput,
+        entity.lastWeekActiveUsers
+    );
+  }
+
+}

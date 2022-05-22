@@ -1,9 +1,10 @@
-import 'package:advanced_datatable/advanced_datatable_source.dart';
-import 'package:advanced_datatable/datatable.dart';
+
 import 'package:calorie/main.dart';
 import 'package:calorie/movas/actions/entry_action.dart';
 import 'package:calorie/movas/models/entry.dart';
 import 'package:calorie/movas/observables/entry_o.dart';
+import 'package:calorie/screen/datatable/advanced_datatable_source.dart';
+import 'package:calorie/screen/datatable/datatable.dart';
 import 'package:calorie/screen/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,6 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
 
   EntryPaginatedTableState(this.source);
 
-  Future<void> refreshSource() async {
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,13 +34,13 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
         source: source,
         addEmptyRows: false,
         showCheckboxColumn: true,
-        showFirstLastButtons: true,
+        showFirstLastButtons: false,
         rowsPerPage: rowsPerPage,
-        availableRowsPerPage: [1, 5, 10, 50],
+        availableRowsPerPage: [AdvancedPaginatedDataTable.defaultRowsPerPage],
         onRowsPerPageChanged: (newRowsPerPage) {
           if (newRowsPerPage != null) {
             setState(() {
-              rowsPerPage = newRowsPerPage;
+              rowsPerPage = source.data.length;
             });
           }
         },
@@ -77,8 +74,12 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
   final data = <EntryO>[];
   List<String> selectedIds = [];
   final SelectedCallBack selectedCallBack;
+  int totalCount = 25;
 
   DataSource(this.selectedCallBack);
+
+  @override
+  int get rowCount => totalCount;
 
   @override
   int get selectedRowCount => selectedIds.length;
@@ -132,24 +133,23 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
   Future<RemoteDataSourceDetails<EntryO>> getNextPage(
       NextPageRequest pageRequest) async {
 
-    var response = await EntryAction.of(navigatorKey.currentContext!).getEntries();
-
-    // if (response is AllEntries) {
-    //   for (var i=0; i<=response.allEntries.length; i++) {
-    //     // if (i >= pageRequest.offset)
-    //     data.add(EntryO.fromEntity(response.allEntries[i]));
-    //   }
-    // }
+    int page = (pageRequest.offset/pageRequest.pageSize).floor()+1;
+    var response = await EntryAction.of(navigatorKey.currentContext!).getEntries(page: page);
 
     if (response is AllEntries) {
+      totalCount = response.totalCount ?? 0;
+      data.clear();
       for (var i in response.allEntries) {
         data.add(EntryO.fromEntity(i));
       }
     }
 
     return RemoteDataSourceDetails(
-      data.length,
+      totalCount,
       data
     );
   }
+
+  @override
+  bool get isRowCountApproximate => false;
 }
