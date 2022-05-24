@@ -19,7 +19,7 @@ class DashboardBody extends StatefulWidget {
 }
 
 class DashboardBodyState extends State<DashboardBody> {
-  List<EntryO> selectedIds = [];
+  List<EntryO> selectedObjects = [];
   final GlobalKey<EntryPaginatedTableState> tableKey = GlobalKey();
 
   @override
@@ -97,16 +97,14 @@ class DashboardBodyState extends State<DashboardBody> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: EntryPaginatedTable(
                     key: tableKey,
-                    selectedCallBack: (obj, selected) {
-                        if (selectedIds.contains(obj)) {
-                          setState(() {
-                            selectedIds.remove(obj);
-                          });
-                        } else {
-                          setState(() {
-                            selectedIds.add(obj);
-                          });
-                        }
+                    selectedCallBack: (objs) {
+                        setState(() {
+                          selectedObjects = objs;
+                        });
+
+                        selectedObjects.forEach((element) {
+                          print('_in selected ${element.name}');
+                        });
                     },
                   ),
                 ),
@@ -116,19 +114,25 @@ class DashboardBodyState extends State<DashboardBody> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (selectedIds.isNotEmpty && selectedIds.length==1)
+                      if (selectedObjects.isNotEmpty && selectedObjects.length==1)
                         DefaultButton("Delete",
-                                () => EntryAction.of(context).deleteEntry(selectedIds[0].user.id)
+                                () => EntryAction.of(context).deleteEntry(selectedObjects[0].user.id)
                                     .then((value) {
-                                  // html.window.location.reload();
+                                      tableKey.currentState?.reload();
                                 }),
                             color: Colors.red),
-                      if (selectedIds.isNotEmpty && selectedIds.length==1)
+                      if (selectedObjects.isNotEmpty && selectedObjects.length==1)
                         DefaultButton("Update",
-                                () => createEntryDialog(context, existingEntry: selectedIds[0]),
+                                () => createEntryDialog(context, existingEntry: selectedObjects[0]).then(<bool>(value) {
+                                  if (value)
+                                    tableKey.currentState?.reload();
+                                }),
                             color: Colors.black),
                       DefaultButton("Create Entry",
-                              () => createEntryDialog(context)),
+                              () => createEntryDialog(context).then(<bool>(value) {
+                                if (value)
+                                  tableKey.currentState?.reload();
+                              })),
                     ],
                   ),
                 ),

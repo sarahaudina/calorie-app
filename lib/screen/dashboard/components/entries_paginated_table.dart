@@ -26,11 +26,22 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
 
   EntryPaginatedTableState(this.source);
 
+  reload() {
+      source.needReload = true;
+      source.notifyListeners();
+      source.needReload = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16))),
       child: AdvancedPaginatedDataTable(
+        loadingWidget: () => Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Center(child: CircularProgressIndicator()),
+        ),
         source: source,
         addEmptyRows: false,
         showCheckboxColumn: true,
@@ -68,13 +79,14 @@ class RowData {
   RowData(this.index, this.value);
 }
 
-typedef SelectedCallBack = Function(EntryO object, bool newSelectState);
+typedef SelectedCallBack = Function(List<EntryO> objects);
 
 class DataSource extends AdvancedDataTableSource<EntryO> {
   final data = <EntryO>[];
-  List<String> selectedIds = [];
+  List<EntryO> selectedObjects = [];
   final SelectedCallBack selectedCallBack;
   int totalCount = 25;
+  bool needReload = false;
 
   DataSource(this.selectedCallBack);
 
@@ -82,22 +94,23 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
   int get rowCount => totalCount;
 
   @override
-  int get selectedRowCount => selectedIds.length;
+  int get selectedRowCount => selectedObjects.length;
 
   @override
   DataRow? getRow(int index) {
     final currentRowData = lastDetails!.rows[index];
     return DataRow(
         onSelectChanged: (selected) {
-          if (selectedIds.contains(currentRowData.id)) {
-            selectedIds.remove(currentRowData.id);
+          if (selectedObjects.where((i) => i.id==currentRowData.id).isNotEmpty) {
+            selectedObjects.removeWhere((i) => i.id==currentRowData.id);
           } else {
-            selectedIds.add(currentRowData.id);
+            selectedObjects.add(currentRowData);
           }
-          selectedCallBack?.call(currentRowData, selectedIds.contains(currentRowData.id));
+
+          selectedCallBack?.call(selectedObjects);
           notifyListeners();
         },
-        selected: selectedIds.contains(data[index].id),
+        selected: selectedObjects.where((i) => i.id==currentRowData.id).isNotEmpty,
         cells: [
       DataCell(
         Text(currentRowData.name.toString()),
@@ -120,15 +133,6 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
     ]);
   }
 
-  void selectedRow(String id, bool newSelectState) {
-    if (selectedIds.contains(id)) {
-      selectedIds.remove(id);
-    } else {
-      selectedIds.add(id);
-    }
-    notifyListeners();
-  }
-
   @override
   Future<RemoteDataSourceDetails<EntryO>> getNextPage(
       NextPageRequest pageRequest) async {
@@ -139,6 +143,7 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
     if (response is AllEntries) {
       totalCount = response.totalCount ?? 0;
       data.clear();
+      // selectedIds.clear();
       for (var i in response.allEntries) {
         data.add(EntryO.fromEntity(i));
       }
@@ -152,4 +157,11 @@ class DataSource extends AdvancedDataTableSource<EntryO> {
 
   @override
   bool get isRowCountApproximate => false;
+
+  @override
+  bool requireRemoteReload() {
+    if (needReload)
+      return true;
+    return super.requireRemoteReload();
+  }
 }
