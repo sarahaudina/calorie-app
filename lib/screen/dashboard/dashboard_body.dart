@@ -6,10 +6,13 @@ import 'package:calorie/screen/shared_components/create_entry_dialog.dart';
 import 'package:calorie/screen/dashboard/components/entries_paginated_table.dart';
 import 'package:calorie/screen/dashboard/components/entries_table.dart';
 import 'package:calorie/screen/shared_components/small_card.dart';
+import 'package:calorie/screen/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:calorie/screen/shared_components/base_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'components/confirmation_dialog.dart';
 
 class DashboardBody extends StatefulWidget {
   @override
@@ -116,29 +119,46 @@ class DashboardBodyState extends State<DashboardBody> {
                     children: [
                       if (selectedObjects.isNotEmpty && selectedObjects.length==1)
                         DefaultButton("Delete",
-                                () => EntryAction.of(context).deleteEntry(selectedObjects[0].user.id)
-                                    .then((value) {
-                                      tableKey.currentState?.reload();
-                                }),
+                                () => showConfirmationDialog(
+                                    context,
+                                    "Delete Entry ${selectedObjects[0].id}",
+                                    "Do you want to delete this item?",
+                                        () => EntryAction.of(context).deleteEntry(selectedObjects[0].id)
+                                        .then((value) {
+                                      setState(() {
+                                        selectedObjects.clear();
+                                        tableKey.currentState?.reload();
+                                      });
+                                      Util.showSuccessDialog(context, "Delete success");
+                                    })),
                             color: Colors.red),
                       if (selectedObjects.isNotEmpty && selectedObjects.length==1)
                         DefaultButton("Update",
                                 () => createEntryDialog(context, existingEntry: selectedObjects[0]).then(<bool>(value) {
-                                  if (value)
-                                    tableKey.currentState?.reload();
+                                  if (value) {
+                                    setState(() {
+                                      selectedObjects.clear();
+                                      tableKey.currentState?.reload();
+                                    });
+                                    Util.showSuccessDialog(context, "Update success");
+                                  }
                                 }),
                             color: Colors.black),
                       DefaultButton("Create Entry",
                               () => createEntryDialog(context).then(<bool>(value) {
-                                if (value)
-                                  tableKey.currentState?.reload();
+                                if (value) {
+                                  setState(() {
+                                    selectedObjects.clear();
+                                    tableKey.currentState?.reload();
+                                  });
+                                }
                               })),
                     ],
                   ),
                 ),
               ],
             ),
-          )),);
+          )));
   }
 
 }

@@ -27,9 +27,11 @@ class EntryPaginatedTableState extends State<EntryPaginatedTable> {
   EntryPaginatedTableState(this.source);
 
   reload() {
+      source.selectedObjects.clear();
       source.needReload = true;
       source.notifyListeners();
       source.needReload = false;
+      source.getNextPage(NextPageRequest(rowsPerPage, 0));
   }
 
   @override

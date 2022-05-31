@@ -116,7 +116,7 @@ class UpdateEntryRequest extends BaseHttpRequest {
     var map = {
       "name":name,
       "calories":calories,
-      "userId":userId,
+      "user":userId,
       "createdAt":createdAt.toString()
     };
 

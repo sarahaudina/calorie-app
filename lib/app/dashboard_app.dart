@@ -16,28 +16,7 @@ class DashboardApp extends StatelessWidget {
       backgroundColor: AdminTheme.backgroundColor,
       scaffoldBackgroundColor: AdminTheme.scaffoldBackgroundColor,
       primaryColorDark: AdminTheme.primaryColorDark,
-      primaryColorLight: AdminTheme.primaryColorLight,
-      textTheme: TextTheme(
-        titleSmall: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 12
-        ),
-        labelLarge: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 32,
-            color: AdminTheme.primaryTextColor
-        ),
-        labelMedium: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 18,
-            color: AdminTheme.primaryTextColor
-        ),
-        labelSmall: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 12,
-            color: AdminTheme.primaryTextColor
-        ),
-      )
+      primaryColorLight: AdminTheme.primaryColorLight
   );
 
   // This widget is the root of your application.

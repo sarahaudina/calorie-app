@@ -53,4 +53,29 @@ class Util {
     );
   }
 
+
+  static showSuccessDialog(BuildContext context, String text) {
+    return showDialog(
+      barrierDismissible: true,
+      context:context,
+      builder:(BuildContext context){
+        return AlertDialog(
+          content: new Row(
+            children: [
+              Container(margin: EdgeInsets.only(left: 7),
+                  child:Text(text)),
+            ]),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

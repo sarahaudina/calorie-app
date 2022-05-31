@@ -39,14 +39,18 @@ class MenuDrawerState extends State<MenuDrawer> {
         children: [
           DrawerHeader(child: Column(
             children: [
-              Icon(Icons.home, size: 60,),
+              Icon(Icons.home,
+                  size: 60,
+                color: Colors.blue.shade900,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top:8.0),
                 child: Text("Calorie Dashboard",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
-                      // color: Colors.white
+                    color: Colors.blue.shade900,
+                    fontWeight: FontWeight.w600
                   )
                 ),
               ),

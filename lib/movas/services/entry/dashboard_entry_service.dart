@@ -43,11 +43,9 @@ class DashboardEntryService extends BaseEntryService {
 
   @override
   Future<void> deleteEntry(DeleteEntryRequest request) async {
-    print('deleteEntry $request');
-    return;
-    // return httpService.delete(request: request).catchError((onError){
-    //
-    // });
+    return httpService.delete(request: request).catchError((onError){
+
+    });
   }
 
   @override
@@ -55,7 +53,6 @@ class DashboardEntryService extends BaseEntryService {
     var response = await httpService.get(
         request: request,
         converter: (_) {
-          // print("getEntries $_");
           return GetEntriesResponse.fromMap(_);
         });
     if (response is GetEntriesResponse) {

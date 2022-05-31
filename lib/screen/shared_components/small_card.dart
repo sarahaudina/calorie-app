@@ -1,3 +1,4 @@
+import 'package:calorie/config/dashboard_config.dart';
 import 'package:calorie/screen/shared_components/base_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +22,33 @@ class SmallCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (title!="")
-              Text(title, style: Theme.of(context).textTheme.labelSmall),
+              Text(title, style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12
+              )),
             if (value!="")
-              Text(value, style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 25)),
+              Padding(
+                padding: const EdgeInsets.only(top:8.0, bottom: 4),
+                child: Text(value, style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 25,
+                    color: AdminTheme.primaryTextColor
+                )),
+              ),
             if (label!="")
-              Text(label, style: Theme.of(context).textTheme.labelSmall),
+              Text(label, style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  color: AdminTheme.primaryTextColor
+              )),
             if (comparedValue!="")
               Padding(
-                padding: const EdgeInsets.only(top:8.0),
-                child: Text(comparedValue, style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                padding: const EdgeInsets.only(top:4.0),
+                child: Text(comparedValue, style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    color: AdminTheme.primaryTextColor
+                ).copyWith(
                     fontWeight: FontWeight.bold, color: compareValueColor ?? Colors.black, fontSize: 10)),
               ),
           ],

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:calorie/config/config.dart';
 
 const String user_id = "6288e3ee702038ded4ccd6d5";
@@ -10,6 +12,9 @@ class MobileConfig extends Config {
 
   @override
   String baseUrl() {
-    return "http://10.0.2.2:1234/api/v1/";
+    if (Platform.isAndroid)
+      return "http://10.0.2.2:1234/api/v1/";
+    else
+      return "http://localhost:1234/api/v1/";
   }
 }

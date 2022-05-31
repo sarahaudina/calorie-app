@@ -21,8 +21,7 @@ class DefaultButton extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Text(title,
-            style: Theme.of(context).textTheme.labelMedium
-                ?.copyWith(color: Colors.white))),
+            style: TextStyle(color: Colors.white))),
     );
   }
 

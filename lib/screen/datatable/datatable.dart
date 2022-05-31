@@ -348,7 +348,7 @@ class PaginatedDataTableState extends State<AdvancedPaginatedDataTable> {
 
       return true;
     }
-    // this could cause severe bug
+    // this could cause severe bug if set to true
     return false;
   }
 
